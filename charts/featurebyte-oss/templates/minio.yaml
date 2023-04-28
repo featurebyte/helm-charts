@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-minio-headless
+  labels:
+    app: minio
+spec:
+  clusterIP: None
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+    - name: console
+      port: 9001
+      protocol: TCP
+      targetPort: 9001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-minio
+  labels:
+    app: minio
+spec:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+    - name: console
+      port: 9001
+      protocol: TCP
+      targetPort: 9001
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-minio
+  labels:
+    app: minio
+spec:
+  serviceName: {{ include "featurebyte-oss.fullname" . }}-minio-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:latest
+          command:
+            - minio
+            - server
+            - "/data"
+            - --console-address
+            - ":9001"
+          ports:
+            - name: api
+              containerPort: 9000
+              protocol: TCP
+            - name: console
+              containerPort: 9001
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 10Gi
