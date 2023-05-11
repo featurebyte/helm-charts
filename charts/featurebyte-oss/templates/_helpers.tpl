@@ -42,12 +42,22 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "featurebyte-oss.labels.minio" -}}
+{{ include "featurebyte-oss.labels" . }}
+{{ include "featurebyte-oss.selectorLabels.minio" . }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
 {{- define "featurebyte-oss.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "featurebyte-oss.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "featurebyte-oss.selectorLabels.minio" -}}
+{{ include "featurebyte-oss.selectorLabels" . }}
+app.kubernetes.io/component: minio
 {{- end }}
 
 {{/*
