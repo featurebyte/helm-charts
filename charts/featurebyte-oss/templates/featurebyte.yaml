@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-api
+  labels: {{ include "featurebyte-oss.labels.api" }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{ include "featurebyte-oss.selectorLabels.api" | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "featurebyte-oss.labels.api" . | nindent 8 }}
+    spec:
+      containers:
+        - name: api
+          image: featurebyte/featurebyte-server:latest
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bash", "/docker-entrypoint.sh", "server"]
+          env:
+            - name: FEATUREBYTE_HOME
+              value: "/app/.featurebyte"
+            - name: MPLCONFIGDIR
+              value: "/app/matplotlib"
+            - name: API_HOST
+              value: "0.0.0.0"
+            - name: API_PORT
+              value: "8088"
+            - name: LOG_LEVEL
+              value: "INFO"
+            - name: LOCAL_UID
+              value: "1000"
+            - name: LOCAL_GID
+              value: "1000"
+
+          # TODO: Missing redis / mongo integration
+
+          # Initial startup time is long due to Mongodb migration
+          # so we need to increase the timeout
+          # TODO: Consider splitting the migration and the server
+          startupProbe:
+            httpGet:
+              path: /status
+              port: 8088
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /status
+              port: 8088
+            periodSeconds: 10

@@ -42,6 +42,11 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "featurebyte-oss.labels.api" -}}
+{{ include "featurebyte-oss.labels" . }}
+{{ include "featurebyte-oss.selectorLabels.api" . }}
+{{- end }}
+
 {{- define "featurebyte-oss.labels.minio" -}}
 {{ include "featurebyte-oss.labels" . }}
 {{ include "featurebyte-oss.selectorLabels.minio" . }}
@@ -53,6 +58,11 @@ Selector labels
 {{- define "featurebyte-oss.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "featurebyte-oss.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "featurebyte-oss.selectorLabels.api" -}}
+{{ include "featurebyte-oss.selectorLabels" . }}
+app.kubernetes.io/component: api
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.minio" -}}
