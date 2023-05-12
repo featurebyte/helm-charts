@@ -3,7 +3,6 @@ version: 3
 tasks:
   dev:
     desc: Start development environment
-    dir: helm/
     cmds:
       - task: dev-init
       - task: dev-start
@@ -12,6 +11,7 @@ tasks:
   dev-init:
     ignore_error: true
     interactive: true
+    run: once
     cmds:
       - k3d cluster create featurebyte --api-port 6443 --port "80:80@loadbalancer" --port "443:80@loadbalancer" --registry-create localhost:10443
 
@@ -33,11 +33,23 @@ tasks:
       - k3d cluster delete featurebyte
 
   dev-helm:
+    desc: Install featurebyte-oss
     aliases:
       - dev-helm-install
+    deps:
+      - mongodb-operator
     cmds:
       - helm upgrade dev charts/featurebyte-oss -n featurebyte --create-namespace --install --dependency-update
 
   dev-helm-uninstall:
     cmds:
       - helm uninstall dev -n featurebyte
+
+  mongodb-operator:
+    desc: Install MongoDB Operator
+    deps:
+      - dev-start
+    status:
+      - helm status community-operator -n featurebyte
+    cmds:
+      - helm upgrade community-operator community-operator --namespace featurebyte --create-namespace --install --repo=https://mongodb.github.io/helm-charts
