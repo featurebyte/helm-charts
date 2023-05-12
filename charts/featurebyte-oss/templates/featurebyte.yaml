@@ -2,11 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "featurebyte-oss.fullname" . }}-api
-  labels: {{ include "featurebyte-oss.labels.api" }}
+  labels: {{ include "featurebyte-oss.labels.api" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
-    matchLabels: {{ include "featurebyte-oss.selectorLabels.api" | nindent 6 }}
+    matchLabels: {{ include "featurebyte-oss.selectorLabels.api" . | nindent 6 }}
   template:
     metadata:
       labels: {{ include "featurebyte-oss.labels.api" . | nindent 8 }}

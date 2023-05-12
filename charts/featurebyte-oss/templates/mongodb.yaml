@@ -1,0 +1,39 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-mongodb
+  labels: {{ include "featurebyte-oss.labels.mongodb" . | nindent 4 }}
+spec:
+  members: 2
+  type: ReplicaSet
+  version: "6.0.5"
+  security:
+    authentication:
+      modes: ["SCRAM"]
+  users:
+    - name: my-user
+      db: admin
+      passwordSecretRef: # a reference to the secret that will be used to generate the user's password
+        name: {{ include "featurebyte-oss.fullname" . }}-mongodb
+      roles:
+        - name: clusterAdmin
+          db: admin
+        - name: userAdminAnyDatabase
+          db: admin
+      scramCredentialsSecretName: {{ include "featurebyte-oss.fullname" . }}-mongodb-scram
+  additionalMongodConfig:
+    # the additional config passed to the mongod process can be specified
+    # either in nested or dot notation
+    storage.wiredTiger.engineConfig.journalCompressor: zlib
+
+
+# the user credentials will be generated from this secret
+# once the credentials are generated, this secret is no longer required
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-mongodb
+type: Opaque
+stringData:
+  password: password

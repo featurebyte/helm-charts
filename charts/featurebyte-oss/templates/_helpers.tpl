@@ -52,6 +52,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "featurebyte-oss.selectorLabels.minio" . }}
 {{- end }}
 
+{{- define "featurebyte-oss.labels.mongodb" -}}
+{{ include "featurebyte-oss.labels" . }}
+{{ include "featurebyte-oss.selectorLabels.mongodb" . }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
@@ -68,6 +73,11 @@ app.kubernetes.io/component: api
 {{- define "featurebyte-oss.selectorLabels.minio" -}}
 {{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: minio
+{{- end }}
+
+{{- define "featurebyte-oss.selectorLabels.mongodb" -}}
+{{ include "featurebyte-oss.selectorLabels" . }}
+app.kubernetes.io/component: mongodb
 {{- end }}
 
 {{/*
