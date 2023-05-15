@@ -11,6 +11,7 @@ spec:
     metadata:
       labels: {{ include "featurebyte-oss.labels.worker" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "featurebyte-oss.serviceAccountName" . }}
       containers:
         - name: worker
           image: featurebyte/featurebyte-server:latest
