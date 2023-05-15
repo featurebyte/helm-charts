@@ -1,29 +1,16 @@
 version: 3
 
+vars:
+  NAMESPACE: featurebyte
+
 tasks:
   dev:
     desc: Start development environment
     cmds:
-      - task: dev-init
+      - task: k3d-init
+      - task: k3d-start
+      - task: mongodb-operator
       - task: dev-start
-      - task: dev-helm
-
-  dev-init:
-    ignore_error: true
-    interactive: true
-    run: once
-    cmds:
-      - k3d cluster create featurebyte --api-port 6443 --port "80:80@loadbalancer" --port "443:80@loadbalancer" --registry-create localhost:10443
-
-  dev-start:
-    desc: Start k3d cluster
-    cmds:
-      - k3d cluster start featurebyte
-
-  dev-stop:
-    desc: Stop development environment
-    cmds:
-      - k3d cluster stop featurebyte
 
   dev-clean:
     desc: Clean development environment
@@ -32,24 +19,48 @@ tasks:
     cmds:
       - k3d cluster delete featurebyte
 
-  dev-helm:
-    desc: Install featurebyte-oss
-    aliases:
-      - dev-helm-install
-    deps:
-      - mongodb-operator
+  dev-start:
+    desc: Install/Upgrade helm chart
+    run: once
     cmds:
-      - helm upgrade dev charts/featurebyte-oss -n featurebyte --create-namespace --install --dependency-update
+      - helm upgrade dev charts/featurebyte-oss -n {{.NAMESPACE}} --create-namespace --install --dependency-update
 
-  dev-helm-uninstall:
+  dev-stop:
+    desc: Uninstall helm chart
     cmds:
       - helm uninstall dev -n featurebyte
+
+  dev-down:
+    run: once
+    desc: Stop development environment
+    cmds:
+      - task: dev-stop
+      - task: k3d-stop
+
+  k3d-init:
+    desc: Initialize k3d cluster
+    run: once
+    ignore_error: true
+    interactive: true
+    cmds:
+      - k3d cluster create featurebyte --api-port 6443 --port "80:80@loadbalancer" --port "443:80@loadbalancer" --registry-create localhost:10443
+
+  k3d-start:
+    desc: Start k3d cluster
+    run: once
+    cmds:
+      - k3d cluster start featurebyte
+
+  k3d-stop:
+    desc: Stop development environment
+    cmds:
+      - k3d cluster stop featurebyte
 
   mongodb-operator:
     desc: Install MongoDB Operator
     deps:
-      - dev-start
+      - k3d-start
     status:
-      - helm status community-operator -n featurebyte
+      - helm status community-operator -n {{.NAMESPACE}}
     cmds:
-      - helm upgrade community-operator community-operator --namespace featurebyte --create-namespace --install --repo=https://mongodb.github.io/helm-charts
+      - helm upgrade community-operator community-operator --namespace {{.NAMESPACE}} --create-namespace --install --repo=https://mongodb.github.io/helm-charts

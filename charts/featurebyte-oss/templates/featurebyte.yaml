@@ -15,7 +15,8 @@ spec:
         - name: api
           image: featurebyte/featurebyte-server:latest
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bash", "/docker-entrypoint.sh", "server"]
+          command: ["sleep", "inf"]
+{{/*          command: ["bash", "/docker-entrypoint.sh", "server"]*/}}
           env:
             - name: FEATUREBYTE_HOME
               value: "/app/.featurebyte"
@@ -37,15 +38,15 @@ spec:
           # Initial startup time is long due to Mongodb migration
           # so we need to increase the timeout
           # TODO: Consider splitting the migration and the server
-          startupProbe:
-            httpGet:
-              path: /status
-              port: 8088
-            initialDelaySeconds: 30
-            periodSeconds: 5
-            failureThreshold: 30
-          livenessProbe:
-            httpGet:
-              path: /status
-              port: 8088
-            periodSeconds: 10
+{{/*          startupProbe:*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /status*/}}
+{{/*              port: 8088*/}}
+{{/*            initialDelaySeconds: 30*/}}
+{{/*            periodSeconds: 5*/}}
+{{/*            failureThreshold: 30*/}}
+{{/*          livenessProbe:*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /status*/}}
+{{/*              port: 8088*/}}
+{{/*            periodSeconds: 10*/}}
