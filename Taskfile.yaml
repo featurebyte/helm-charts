@@ -42,6 +42,8 @@ tasks:
     run: once
     ignore_error: true
     interactive: true
+    status:
+      - k3d cluster list featurebyte
     cmds:
       - k3d cluster create featurebyte --api-port 6443 --port "80:80@loadbalancer" --port "443:80@loadbalancer" --registry-create localhost:10443
 
