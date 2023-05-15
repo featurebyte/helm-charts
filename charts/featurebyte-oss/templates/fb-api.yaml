@@ -20,7 +20,9 @@ metadata:
   name: {{ include "featurebyte-oss.fullname" . }}-api
   labels: {{ include "featurebyte-oss.labels.api" . | nindent 4 }}
 spec:
+  {{- if not .Values.featurebyte.api.autoscaling.enabled }}
   replicas: {{ .Values.featurebyte.api.replicaCount }}
+  {{- end }}
   selector:
     matchLabels: {{ include "featurebyte-oss.selectorLabels.api" . | nindent 6 }}
   template:
@@ -73,4 +75,28 @@ spec:
               path: /status
               port: 8088
             periodSeconds: 10
+          resources:
+            {{- toYaml .Values.featurebyte.api.resources | nindent 12 }}
       {{- include "featurebyte-oss.podAffinity.api" . | indent 4 }}
+---
+{{- if .Values.featurebyte.api.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-api
+  labels: {{ include "featurebyte-oss.labels.api" . | nindent 4 }}
+spec:
+  minReplicas: {{ .Values.featurebyte.api.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.featurebyte.api.autoscaling.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "featurebyte-oss.fullname" . }}-api
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.featurebyte.api.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
