@@ -12,9 +12,9 @@ spec:
       labels: {{ include "featurebyte-oss.labels.worker" . | nindent 8 }}
     spec:
       containers:
-        - name: api
+        - name: worker
           image: featurebyte/featurebyte-server:latest
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.featurebyte.worker.image.pullPolicy }}
           command: ["bash", "/docker-entrypoint.sh", "worker"]
           env:
             - name: FEATUREBYTE_HOME
@@ -44,3 +44,4 @@ spec:
             # TODO: allow user to use their own redis
             - name: REDIS_URI
               value: "redis://{{ include "featurebyte-oss.fullname" . }}-redis:6379"
+      {{- include "featurebyte-oss.podAffinity.worker" . | indent 4 }}

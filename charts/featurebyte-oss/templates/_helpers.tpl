@@ -110,3 +110,36 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Pod Affinity | Tolerations | Selectors
+*/}}
+{{- define "featurebyte-oss.podAffinity.api" -}}
+{{- with .Values.featurebyte.api.nodeSelector }}
+nodeSelector:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.featurebyte.api.affinity }}
+affinity:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.featurebyte.api.tolerations }}
+tolerations:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+
+{{- define "featurebyte-oss.podAffinity.worker" -}}
+{{- with .Values.featurebyte.worker.nodeSelector }}
+nodeSelector:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.featurebyte.worker.affinity }}
+affinity:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.featurebyte.worker.tolerations }}
+tolerations:
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
