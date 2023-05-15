@@ -62,6 +62,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "featurebyte-oss.selectorLabels.redis" . }}
 {{- end }}
 
+{{- define "featurebyte-oss.labels.worker" -}}
+{{ include "featurebyte-oss.labels" . }}
+{{ include "featurebyte-oss.selectorLabels.worker" . }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
@@ -88,6 +93,11 @@ app.kubernetes.io/component: mongodb
 {{- define "featurebyte-oss.selectorLabels.redis" -}}
 {{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: redis
+{{- end }}
+
+{{- define "featurebyte-oss.selectorLabels.worker" -}}
+{{ include "featurebyte-oss.selectorLabels" . }}
+app.kubernetes.io/component: worker
 {{- end }}
 
 {{/*

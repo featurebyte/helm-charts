@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  labels: {{ include "featurebyte-oss.labels" . | nindent 4 }}
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "featurebyte-oss.fullname" . }}-api
+                port:
+                  number: 8088
