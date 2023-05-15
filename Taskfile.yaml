@@ -64,3 +64,9 @@ tasks:
       - helm status community-operator -n {{.NAMESPACE}}
     cmds:
       - helm upgrade community-operator community-operator --namespace {{.NAMESPACE}} --create-namespace --install --repo=https://mongodb.github.io/helm-charts
+
+# DEBUGGING COMMANDS
+  helm-template:
+    dir: charts/featurebyte-oss
+    cmds:
+      - helm template featurebyte-oss . -n {{.NAMESPACE}} --debug

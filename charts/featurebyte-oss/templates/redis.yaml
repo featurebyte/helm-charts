@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-redis-data
+  labels: {{ include "featurebyte-oss.labels.redis" . | nindent 4 }}
+spec:
+  accessModes: ["ReadWriteOnce"]
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "featurebyte-oss.fullname" . }}-redis
+  labels: {{ include "featurebyte-oss.labels.redis" . | nindent 4 }}
+spec:
+  containers:
+    - name: redis
+      image: "redis:7"
+      command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: {{ include "featurebyte-oss.fullname" . }}-redis-data
