@@ -11,14 +11,12 @@ spec:
     authentication:
       modes: ["SCRAM"]
   users:
-    - name: my-user
+    - name: featurebyte
       db: admin
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
         name: {{ include "featurebyte-oss.fullname" . }}-mongodb
       roles:
-        - name: clusterAdmin
-          db: admin
-        - name: userAdminAnyDatabase
+        - name: readWriteAnyDatabase
           db: admin
       scramCredentialsSecretName: {{ include "featurebyte-oss.fullname" . }}-mongodb-scram
   additionalMongodConfig:
