@@ -16,8 +16,8 @@ featurebyte:
   api:
     replicaCount: 1
     image:
-      repository: "featurebyte/featurebyte-server"
-      pullPolicy: IfNotPresent
+      repository: "featurebyte.localhost:10443/featurebyte-server"
+      pullPolicy: Always
       tag: "latest"
     resources:
        limits:
@@ -37,8 +37,8 @@ featurebyte:
   worker:
     replicaCount: 1
     image:
-      repository: "featurebyte/featurebyte-server"
-      pullPolicy: IfNotPresent
+      repository: "featurebyte.localhost:10443/featurebyte-server"
+      pullPolicy: Always
       tag: "latest"
     resources: {}
       # We usually recommend not to specify default resources and to leave this as a conscious

@@ -62,9 +62,19 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "featurebyte-oss.selectorLabels.redis" . }}
 {{- end }}
 
-{{- define "featurebyte-oss.labels.worker" -}}
+{{- define "featurebyte-oss.labels.worker.io" -}}
 {{ include "featurebyte-oss.labels" . }}
-{{ include "featurebyte-oss.selectorLabels.worker" . }}
+{{ include "featurebyte-oss.selectorLabels.worker.io" . }}
+{{- end }}
+
+{{- define "featurebyte-oss.labels.worker.cpu" -}}
+{{ include "featurebyte-oss.labels" . }}
+{{ include "featurebyte-oss.selectorLabels.worker.cpu" . }}
+{{- end }}
+
+{{- define "featurebyte-oss.labels.scheduler" -}}
+{{ include "featurebyte-oss.labels" . }}
+{{ include "featurebyte-oss.selectorLabels.scheduler" . }}
 {{- end }}
 
 {{/*
@@ -95,9 +105,19 @@ app.kubernetes.io/component: mongodb
 app.kubernetes.io/component: redis
 {{- end }}
 
-{{- define "featurebyte-oss.selectorLabels.worker" -}}
+{{- define "featurebyte-oss.selectorLabels.worker.io" -}}
 {{ include "featurebyte-oss.selectorLabels" . }}
-app.kubernetes.io/component: worker
+app.kubernetes.io/component: worker.io
+{{- end }}
+
+{{- define "featurebyte-oss.selectorLabels.worker.cpu" -}}
+{{ include "featurebyte-oss.selectorLabels" . }}
+app.kubernetes.io/component: worker.cpu
+{{- end }}
+
+{{- define "featurebyte-oss.selectorLabels.scheduler" -}}
+{{ include "featurebyte-oss.selectorLabels" . }}
+app.kubernetes.io/component: scheduler
 {{- end }}
 
 {{/*
