@@ -1,0 +1,58 @@
+suite: featurebyte-api
+
+tests:
+  - it: api deployment exists
+    template: fb-api/deployment.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: featurebyte/featurebyte-server:latest
+  - it: api image changes
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.api.image.repository: "featurebyte.localhost:10443/featurebyte-server"
+      featurebyte.api.image.tag: "latest"
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: featurebyte.localhost:10443/featurebyte-server:latest
+
+  - it: api using mongodb operator
+    template: fb-api/deployment.yaml
+    set:
+      mongodb.enabled: true
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      # check that the mongodb external secret is specified
+      - notMatchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "MONGODB_URI")].valueFrom.secretKeyRef.name
+          pattern: -mongodb-external$
+
+  - it: api using external mongodb
+    template: fb-api/deployment.yaml
+    set:
+      mongodb.enabled: false
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      # check that the mongodb external secret is specified
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "MONGODB_URI")].valueFrom.secretKeyRef.name
+          pattern: -mongodb-external$
