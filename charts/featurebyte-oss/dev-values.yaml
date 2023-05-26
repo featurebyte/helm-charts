@@ -1,0 +1,7 @@
+featurebyte:
+  api:
+    image:
+      repository: "featurebyte.localhost:10443/featurebyte-server"
+  worker:
+    image:
+      repository: "featurebyte.localhost:10443/featurebyte-server"

@@ -16,7 +16,7 @@ featurebyte:
   api:
     replicaCount: 1
     image:
-      repository: "featurebyte.localhost:10443/featurebyte-server"
+      repository: "featurebyte/featurebyte-server"
       pullPolicy: Always
       tag: "latest"
     resources:
@@ -37,7 +37,7 @@ featurebyte:
   worker:
     replicaCount: 1
     image:
-      repository: "featurebyte.localhost:10443/featurebyte-server"
+      repository: "featurebyte/featurebyte-server"
       pullPolicy: Always
       tag: "latest"
     resources: {}

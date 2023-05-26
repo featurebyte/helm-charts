@@ -22,8 +22,9 @@ tasks:
   dev-start:
     desc: Install/Upgrade helm chart
     run: once
+    dir: charts/featurebyte-oss
     cmds:
-      - helm upgrade dev charts/featurebyte-oss -n {{.NAMESPACE}} --create-namespace --install --dependency-update
+      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
 
   dev-stop:
     desc: Uninstall helm chart
