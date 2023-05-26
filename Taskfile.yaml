@@ -72,3 +72,17 @@ tasks:
     dir: charts/featurebyte-oss
     cmds:
       - helm template featurebyte-oss . -n {{.NAMESPACE}} --debug
+
+  test-plugins:
+    internal: true
+    status:
+      - helm plugin list | grep "unittest"
+    cmds:
+      - helm plugin install https://github.com/helm-unittest/helm-unittest.git
+
+  test:
+    dir: charts/featurebyte-oss
+    deps:
+      - task: test-plugins
+    cmds:
+      - helm unittest .
