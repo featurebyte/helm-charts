@@ -24,25 +24,4 @@ spec:
     # the additional config passed to the mongod process can be specified
     # either in nested or dot notation
     storage.wiredTiger.engineConfig.journalCompressor: zlib
----
-# the user credentials will be generated from this secret
-# once the credentials are generated, this secret is no longer required
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "featurebyte-oss.fullname" . }}-mongodb
-  labels: {{- include "featurebyte-oss.labels.mongodb" . | nindent 4 }}
-type: Opaque
-stringData:
-  password: password
-{{- else }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ include "featurebyte-oss.fullname" . }}-mongodb-external
-  labels: {{- include "featurebyte-oss.labels.mongodb" . | nindent 4 }}
-type: Opaque
-stringData:
-  connectionString.standard: {{ .Values.mongodb.external.connectionStr }}
-{{- end}}
+{{- end }}

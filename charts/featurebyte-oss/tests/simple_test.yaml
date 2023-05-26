@@ -1,0 +1,20 @@
+suite: simple test deployment
+templates:
+  - fb-api/deployment.yaml
+release:
+  name: development
+
+tests:
+  - it: api up
+    set:
+      featurebyte.api.image.repository: "featurebyte.localhost:10443/featurebyte-server"
+      featurebyte.api.image.tag: "latest"
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: featurebyte.localhost:10443/featurebyte-server:latest

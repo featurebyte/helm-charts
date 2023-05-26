@@ -31,8 +31,13 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels
+Base labels
 */}}
+{{- define "featurebyte-oss.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "featurebyte-oss.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
 {{- define "featurebyte-oss.labels" -}}
 helm.sh/chart: {{ include "featurebyte-oss.chart" . }}
 {{ include "featurebyte-oss.selectorLabels" . }}
@@ -42,6 +47,9 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{/*
+Common labels
+*/}}
 {{- define "featurebyte-oss.labels.api" -}}
 {{ include "featurebyte-oss.labels" . }}
 {{ include "featurebyte-oss.selectorLabels.api" . }}
@@ -80,43 +88,31 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "featurebyte-oss.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "featurebyte-oss.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
 {{- define "featurebyte-oss.selectorLabels.api" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: api
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.minio" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: minio
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.mongodb" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: mongodb
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.redis" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: redis
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.worker.io" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: worker.io
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.worker.cpu" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: worker.cpu
 {{- end }}
 
 {{- define "featurebyte-oss.selectorLabels.scheduler" -}}
-{{ include "featurebyte-oss.selectorLabels" . }}
 app.kubernetes.io/component: scheduler
 {{- end }}
 
