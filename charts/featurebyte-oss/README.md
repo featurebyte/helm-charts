@@ -10,7 +10,7 @@
 ```bash
 cd featurebyte
 
-docker buildx build . -f docker/Dockerfile -t featurebyte.localhost:10443/featurebyte-server:latest
+docker buildx build . -f docker/Dockerfile -t featurebyte.localhost:10443/featurebyte-server:latest --push
 ```
 
 

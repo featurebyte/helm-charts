@@ -67,4 +67,10 @@ minio:
 
 mongodb:
   enabled: true
+  # If mongodb is disabled, you would need to specify a mongodb connection str to connect
+  # to an external mongodb instance. External mongodb must have a replicaset architecture.
+  external:
+    connectionStr: "mongodb://external:27017"
 
+ingress:
+  enabled: false
