@@ -18,8 +18,6 @@ spec:
           imagePullPolicy: {{ .Values.featurebyte.worker.image.pullPolicy }}
           command: ["bash", "/docker-entrypoint.sh", "worker:io"]
           env:
-            - name: LOG_LEVEL
-              value: "INFO"
             {{- include "featurebyte-oss.env.mongodb" . | nindent 12 }}
             {{- include "featurebyte-oss.env.redis" . | nindent 12 }}
       {{- include "featurebyte-oss.podAffinity.worker" . | indent 4 }}

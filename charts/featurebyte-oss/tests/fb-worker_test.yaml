@@ -1,0 +1,58 @@
+suite: featurebyte-worker
+
+tests:
+  - it: worker[scheduler] deployment exists
+    template: fb-worker/deployment-scheduler.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -scheduler$
+  - it: worker[cpu] deployment exists
+    template: fb-worker/deployment-worker-cpu.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: worker-cpu$
+
+  - it: worker[io] deployment exists
+    template: fb-worker/deployment-worker-io.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: worker-io$
+
+  - it: workers using mongodb operator
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
+    set:
+      mongodb.enabled: true
+    asserts:
+      - isKind:
+          of: Deployment
+      # check that the mongodb external secret is specified
+      - notMatchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "MONGODB_URI")].valueFrom.secretKeyRef.name
+          pattern: -mongodb-external$
+
+  - it: workers not using mongodb operator
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
+    set:
+      mongodb.enabled: false
+    asserts:
+      - isKind:
+          of: Deployment
+      # check that the mongodb external secret is specified
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "MONGODB_URI")].valueFrom.secretKeyRef.name
+          pattern: -mongodb-external$
