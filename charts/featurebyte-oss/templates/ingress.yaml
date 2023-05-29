@@ -15,4 +15,4 @@ spec:
                 name: {{ include "featurebyte-oss.fullname" . }}-api
                 port:
                   number: 8088
-  {{- end }}
+{{- end }}

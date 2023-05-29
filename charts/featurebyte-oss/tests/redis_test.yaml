@@ -1,0 +1,61 @@
+suite: redis
+
+tests:
+  - it: redis deployment exists
+    template: redis/statefulset.yaml
+    set:
+      redis.enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - matchRegex:
+          path: metadata.name
+          pattern: -redis$
+
+  - it: redis deployment is missing
+    template: redis/statefulset.yaml
+    set:
+      redis.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: redis service[headless] exists
+    template: redis/service.yaml
+    set:
+      redis.enabled: true
+    documentIndex: 0
+    asserts:
+      - isKind:
+          of: Service
+      - matchRegex:
+          path: metadata.name
+          pattern: -redis-headless$
+
+  - it: redis service exists
+    template: redis/service.yaml
+    set:
+      redis.enabled: true
+    documentIndex: 1
+    asserts:
+      - isKind:
+          of: Service
+      - matchRegex:
+          path: metadata.name
+          pattern: -redis$
+
+  - it: redis service is enabled
+    template: redis/service.yaml
+    set:
+      redis.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 2
+
+  - it: redis service is disabled
+    template: redis/service.yaml
+    set:
+      redis.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
