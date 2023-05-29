@@ -1,0 +1,55 @@
+suite: minio
+
+tests:
+  - it: minio deployment exists
+    template: minio/statefulset.yaml
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - matchRegex:
+          path: metadata.name
+          pattern: -minio$
+
+  - it: minio service[headless] exists
+    template: minio/service.yaml
+    documentIndex: 0
+    asserts:
+      - isKind:
+          of: Service
+      - matchRegex:
+          path: metadata.name
+          pattern: -minio-headless$
+
+  - it: minio service exists
+    template: minio/service.yaml
+    documentIndex: 1
+    asserts:
+      - isKind:
+          of: Service
+      - matchRegex:
+          path: metadata.name
+          pattern: -minio$
+
+  - it: minio deployment is disabled
+    template: minio/statefulset.yaml
+    set:
+      minio.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: minio service is disabled
+    template: minio/service.yaml
+    set:
+      minio.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: minio service is enabled
+    template: minio/service.yaml
+    set:
+      minio.enabled: true
+    asserts:
+      - hasDocuments:
+          count: 2
