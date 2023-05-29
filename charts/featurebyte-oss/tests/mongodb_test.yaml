@@ -1,0 +1,113 @@
+suite: mongodb community test
+
+tests:
+  - it: mongodb community should be enabled by default
+    template: mongodb/mongodbcommunity.yaml
+    asserts:
+      - isKind:
+          of: MongoDBCommunity
+      - matchRegex:
+          path: metadata.name
+          pattern: -mongodb$
+      - equal:
+          path: spec.members
+          value: 2
+      - equal:
+          path: spec.security.authentication.modes
+          value: ["SCRAM"]
+
+  - it: mongodb community disabled
+    templates:
+      - mongodb/secret-mongodbcommunity.yaml
+      - mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: mongodb community disabled(exists)
+    templates:
+      - mongodb/secret-external.yaml
+    set:
+      mongodb.enabled: false
+    asserts:
+      # has one external mongodb password
+      - hasDocuments:
+          count: 1
+
+  - it: mongodb community default user
+    template: mongodb/mongodbcommunity.yaml
+    asserts:
+      # match that featurebyte user reference the correct password
+      - matchRegex:
+          path: spec.users[?(@.name == "featurebyte")].passwordSecretRef.name
+          pattern: -mongodb$
+
+  - it: mongodb community default role
+    template: mongodb/mongodbcommunity.yaml
+    asserts:
+      # match that featurebyte user reference the correct password
+      - contains:
+          path: spec.users[?(@.name == "featurebyte")].roles
+          content:
+            name: readWriteAnyDatabase
+            db: admin
+
+  - it: mongodb community external
+    template: mongodb/secret-external.yaml
+    set:
+      mongodb.external.connectionStr: "mongodb://external-test:27017"
+      mongodb.enabled: false
+    asserts:
+      - isKind:
+          of: Secret
+      - matchRegex:
+          path: metadata.name
+          pattern: -mongodb-external$
+      - equal:
+            path: stringData["connectionString.standard"]
+            value: "mongodb://external-test:27017"
+
+  - it: mongodb community secret
+    template: mongodb/secret-mongodbcommunity.yaml
+    set:
+      mongodb.enabled: true
+      mongodb.passwordRef.enabled: false
+      mongodb.password: "test-password"
+    asserts:
+      - isKind:
+          of: Secret
+      - matchRegex:
+          path: metadata.name
+          pattern: -mongodb$
+      - equal:
+          path: stringData["password"]
+          value: "test-password"
+
+  - it: mongodb community secret passwordRef
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.enabled: true
+      mongodb.passwordRef.enabled: true
+      mongodb.passwordRef.name: "my-own-passwordref"
+      mongodb.passwordRef.key: "passwordid"
+    asserts:
+      - isKind:
+          of: MongoDBCommunity
+      - equal:
+          path: spec.users[?(@.name == "featurebyte")].passwordSecretRef
+          value:
+            name: "my-own-passwordref"
+            key: "passwordid"
+
+  - it: mongodb community secret with passwordRef does not create default password
+    template: mongodb/secret-mongodbcommunity.yaml
+    set:
+      mongodb.enabled: true
+      mongodb.passwordRef.enabled: true
+      mongodb.passwordRef.name: "my-own-passwordref"
+      mongodb.passwordRef.key: "passwordid"
+    asserts:
+      - hasDocuments:
+          count: 0

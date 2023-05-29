@@ -14,8 +14,14 @@ spec:
   users:
     - name: featurebyte
       db: admin
+      {{- if .Values.mongodb.passwordRef.enabled }}
+      passwordSecretRef: # a reference to the secret that will be used to generate the user's password
+        name: {{ .Values.mongodb.passwordRef.name }}
+        key: {{ .Values.mongodb.passwordRef.key }}
+      {{- else }}
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
         name: {{ include "featurebyte-oss.fullname" . }}-mongodb
+      {{- end }}
       roles:
         - name: readWriteAnyDatabase
           db: admin

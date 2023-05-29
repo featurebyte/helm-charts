@@ -62,6 +62,13 @@ minio:
 
 mongodb:
   enabled: true
+  password: "<your-password>"
+  passwordRef:
+    # passwordRef takes precedence over password
+    # if you set mongodb.passwordRef.enabled to true, mongodb.password will be IGNORED
+    enabled: false
+    name: ""
+    key: "password"
   # If mongodb is disabled, you would need to specify a mongodb connection str to connect
   # to an external mongodb instance. External mongodb must have a replicaset architecture.
   external:

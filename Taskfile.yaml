@@ -24,7 +24,7 @@ tasks:
     run: once
     dir: charts/featurebyte-oss
     cmds:
-      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
+      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml
 
   dev-stop:
     desc: Uninstall helm chart
@@ -69,6 +69,10 @@ tasks:
       - helm upgrade community-operator community-operator --namespace {{.NAMESPACE}} --create-namespace --install --repo=https://mongodb.github.io/helm-charts
 
 # DEBUGGING COMMANDS
+  dev-local:
+    dir: charts/featurebyte-oss
+    cmds:
+      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
   helm-template:
     dir: charts/featurebyte-oss
     cmds:
