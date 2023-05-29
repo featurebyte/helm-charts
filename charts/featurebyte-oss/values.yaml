@@ -67,5 +67,11 @@ mongodb:
   external:
     connectionStr: "mongodb://external:27017"
 
+redis:
+  enabled: true
+  # If reids is disabled, you would need to specify a redis connection str to connect
+  external:
+    connectionStr: "redis://external:6379"
+
 ingress:
   enabled: false

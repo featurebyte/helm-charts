@@ -117,3 +117,30 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].resources.requests.memory
           value: 2Gi
+
+  - it: api redis rendering
+    template: fb-api/deployment.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "REDIS_URI")].value
+          pattern: "^redis://.+?-redis:6379$"
+
+  - it: api using external redis
+    template: fb-api/deployment.yaml
+    set:
+      redis.enabled: false
+      redis.external.connectionStr: "redis://localhost:6379"
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "REDIS_URI")].value
+          pattern: "^redis://localhost:6379$"
