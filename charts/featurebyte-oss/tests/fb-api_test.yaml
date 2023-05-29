@@ -56,3 +56,64 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[0].env[?(@.name == "MONGODB_URI")].valueFrom.secretKeyRef.name
           pattern: -mongodb-external$
+
+  - it: api uses hpa by default
+    template: fb-api/deployment.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - isNull:
+          path: spec.replicas
+
+  - it: api hpa enabled by default
+    template: fb-api/hpa.yaml
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - matchRegex:
+          path: spec.scaleTargetRef.name
+          pattern: -api$
+
+  - it: api disabled
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.api.autoscaling.enabled: false
+    asserts:
+      - isNotNull:
+          path: spec.replicas
+
+  - it: api hpa disabled
+    template: fb-api/hpa.yaml
+    set:
+      featurebyte.api.autoscaling.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: api resources rendering
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.api.resources.limits.memory: 2Gi
+      featurebyte.api.resources.requests.cpu: 1000m
+      featurebyte.api.resources.requests.memory: 2Gi
+    asserts:
+      - isKind:
+          of: Deployment
+      - matchRegex:
+          path: metadata.name
+          pattern: -api$
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 2Gi
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: 1000m
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.memory
+          value: 2Gi
