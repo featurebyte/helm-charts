@@ -2,6 +2,7 @@ version: 3
 
 vars:
   NAMESPACE: featurebyte
+  KUBE_CONTEXT: k3d-featurebyte
 
 tasks:
   dev:
@@ -24,12 +25,12 @@ tasks:
     run: once
     dir: charts/featurebyte-oss
     cmds:
-      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml
+      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update --kube-context {{.KUBE_CONTEXT}} -f values.yaml
 
   dev-stop:
     desc: Uninstall helm chart
     cmds:
-      - helm uninstall dev -n featurebyte
+      - helm uninstall dev -n featurebyte --kube-context {{.KUBE_CONTEXT}}
 
   dev-down:
     run: once
@@ -66,17 +67,17 @@ tasks:
     status:
       - helm status community-operator -n {{.NAMESPACE}}
     cmds:
-      - helm upgrade community-operator community-operator --namespace {{.NAMESPACE}} --create-namespace --install --repo=https://mongodb.github.io/helm-charts
+      - helm upgrade community-operator community-operator --kube-context {{.KUBE_CONTEXT}} --namespace {{.NAMESPACE}} --create-namespace --install --repo=https://mongodb.github.io/helm-charts
 
 # DEBUGGING COMMANDS
   dev-local:
     dir: charts/featurebyte-oss
     cmds:
-      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
+      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --kube-context {{.KUBE_CONTEXT}} --dependency-update -f values.yaml,dev-values.yaml
   helm-template:
     dir: charts/featurebyte-oss
     cmds:
-      - helm template featurebyte-oss . -n {{.NAMESPACE}} --debug
+      - helm template featurebyte-oss . -n {{.NAMESPACE}} --kube-context {{.KUBE_CONTEXT}} --debug
 
   test-plugins:
     internal: true
@@ -90,4 +91,4 @@ tasks:
     deps:
       - task: test-plugins
     cmds:
-      - helm unittest .
+      - helm unittest . 
