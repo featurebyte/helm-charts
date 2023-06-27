@@ -1,4 +1,4 @@
-{{- if .Values.minio.enabled }}
+{{- if eq .Values.s3.provider "minio" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -13,6 +13,19 @@ spec:
     metadata:
       labels: {{ include "featurebyte-oss.labels.minio" . | nindent 8 }}
     spec:
+      initContainers:
+        # To create the bucket first before starting the server
+        - name: fsBucket
+          image: minio/minio:latest
+          command:
+            - sh
+            - "-c"
+            - "mkdir -p /data/${MINIO_BUCKET_NAME}"
+          env:
+            {{- include "featurebyte-oss.env.s3minio" . | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
       containers:
         - name: minio
           image: minio/minio:latest
@@ -22,6 +35,8 @@ spec:
             - "/data"
             - --console-address
             - ":9001"
+          env:
+            {{- include "featurebyte-oss.env.s3minio" . | nindent 12 }}
           ports:
             - name: api
               containerPort: 9000

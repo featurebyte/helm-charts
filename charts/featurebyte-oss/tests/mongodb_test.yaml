@@ -21,7 +21,7 @@ tests:
       - mongodb/secret-mongodbcommunity.yaml
       - mongodb/mongodbcommunity.yaml
     set:
-      mongodb.enabled: false
+      mongodb.provider: "external"
     asserts:
       - hasDocuments:
           count: 0
@@ -30,7 +30,7 @@ tests:
     templates:
       - mongodb/secret-external.yaml
     set:
-      mongodb.enabled: false
+      mongodb.provider: "external"
     asserts:
       # has one external mongodb password
       - hasDocuments:
@@ -58,7 +58,7 @@ tests:
     template: mongodb/secret-external.yaml
     set:
       mongodb.external.connectionStr: "mongodb://external-test:27017"
-      mongodb.enabled: false
+      mongodb.provider: "external"
     asserts:
       - isKind:
           of: Secret
@@ -72,9 +72,9 @@ tests:
   - it: mongodb community secret
     template: mongodb/secret-mongodbcommunity.yaml
     set:
-      mongodb.enabled: true
-      mongodb.passwordRef.enabled: false
-      mongodb.password: "test-password"
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.passwordRef.enabled: false
+      mongodb.communityOperator.password: "test-password"
     asserts:
       - isKind:
           of: Secret
@@ -88,10 +88,10 @@ tests:
   - it: mongodb community secret passwordRef
     template: mongodb/mongodbcommunity.yaml
     set:
-      mongodb.enabled: true
-      mongodb.passwordRef.enabled: true
-      mongodb.passwordRef.name: "my-own-passwordref"
-      mongodb.passwordRef.key: "passwordid"
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.passwordRef.enabled: true
+      mongodb.communityOperator.passwordRef.name: "my-own-passwordref"
+      mongodb.communityOperator.passwordRef.key: "passwordid"
     asserts:
       - isKind:
           of: MongoDBCommunity
@@ -104,10 +104,10 @@ tests:
   - it: mongodb community secret with passwordRef does not create default password
     template: mongodb/secret-mongodbcommunity.yaml
     set:
-      mongodb.enabled: true
-      mongodb.passwordRef.enabled: true
-      mongodb.passwordRef.name: "my-own-passwordref"
-      mongodb.passwordRef.key: "passwordid"
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.passwordRef.enabled: true
+      mongodb.communityOperator.passwordRef.name: "my-own-passwordref"
+      mongodb.communityOperator.passwordRef.key: "passwordid"
     asserts:
       - hasDocuments:
           count: 0

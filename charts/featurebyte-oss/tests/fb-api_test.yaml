@@ -30,7 +30,7 @@ tests:
   - it: api using mongodb operator
     template: fb-api/deployment.yaml
     set:
-      mongodb.enabled: true
+      mongodb.provider: "communityOperator"
     asserts:
       - isKind:
           of: Deployment
@@ -45,7 +45,7 @@ tests:
   - it: api using external mongodb
     template: fb-api/deployment.yaml
     set:
-      mongodb.enabled: false
+      mongodb.provider: "external"
     asserts:
       - isKind:
           of: Deployment
@@ -133,7 +133,7 @@ tests:
   - it: api using external redis
     template: fb-api/deployment.yaml
     set:
-      redis.enabled: false
+      redis.provider: "external"
       redis.external.connectionStr: "redis://localhost:6379"
     asserts:
       - isKind:
@@ -144,3 +144,22 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[0].env[?(@.name == "REDIS_URI")].value
           pattern: "^redis://localhost:6379$"
+
+  - it: api using minio
+    template: fb-api/deployment.yaml
+    set:
+      s3.provider: "minio"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "S3_ENDPOINT")].value
+          pattern: "^http://.+?-minio:9000$"
+
+  - it: api using external
+    template: fb-api/deployment.yaml
+    set:
+      s3.provider: "external"
+      s3.external.endpoint: "https://storage.googleapis.com"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "S3_ENDPOINT")].value
+          pattern: "^https://storage.googleapis.com$"

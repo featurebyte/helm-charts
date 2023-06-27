@@ -3,6 +3,8 @@ suite: minio
 tests:
   - it: minio deployment exists
     template: minio/statefulset.yaml
+    set:
+      s3.provider: "minio"
     asserts:
       - isKind:
           of: StatefulSet
@@ -13,6 +15,8 @@ tests:
   - it: minio service[headless] exists
     template: minio/service.yaml
     documentIndex: 0
+    set:
+      s3.provider: "minio"
     asserts:
       - isKind:
           of: Service
@@ -23,6 +27,8 @@ tests:
   - it: minio service exists
     template: minio/service.yaml
     documentIndex: 1
+    set:
+      s3.provider: "minio"
     asserts:
       - isKind:
           of: Service
@@ -33,7 +39,7 @@ tests:
   - it: minio deployment is disabled
     template: minio/statefulset.yaml
     set:
-      minio.enabled: false
+      s3.provider: "external"
     asserts:
       - hasDocuments:
           count: 0
@@ -41,7 +47,7 @@ tests:
   - it: minio service is disabled
     template: minio/service.yaml
     set:
-      minio.enabled: false
+      s3.provider: "external"
     asserts:
       - hasDocuments:
           count: 0
@@ -49,7 +55,7 @@ tests:
   - it: minio service is enabled
     template: minio/service.yaml
     set:
-      minio.enabled: true
+      s3.provider: "minio"
     asserts:
       - hasDocuments:
           count: 2

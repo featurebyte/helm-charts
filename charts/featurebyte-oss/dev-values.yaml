@@ -1,10 +1,10 @@
 featurebyte:
   api:
     image:
-      repository: "featurebyte.localhost:10443/featurebyte-server"
+      repository: "registry.localhost:10443/featurebyte-server"
   worker:
     image:
-      repository: "featurebyte.localhost:10443/featurebyte-server"
+      repository: "registry.localhost:10443/featurebyte-server"
 
 # Enable access to localhost:80 to connect to the featurebyte-api server
 ingress:

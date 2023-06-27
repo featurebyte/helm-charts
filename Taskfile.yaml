@@ -2,78 +2,73 @@ version: 3
 
 vars:
   NAMESPACE: featurebyte
-  KUBE_CONTEXT: k3d-featurebyte
+  CLUSTER_NAME: featurebyte-helm
+  RAILGUARDS_DISABLED: false
+  RAILGUARDS_KUBE_CONTEXT: k3d-featurebyte-helm
 
 tasks:
-  dev:
-    desc: Start development environment
-    cmds:
-      - task: k3d-init
-      - task: k3d-start
-      - task: mongodb-operator
-      - task: dev-start
-
-  dev-clean:
-    desc: Clean development environment
-    deps:
-      - task: dev-stop
-    cmds:
-      - k3d cluster delete featurebyte
-
-  dev-start:
-    desc: Install/Upgrade helm chart
-    run: once
-    dir: charts/featurebyte-oss
-    cmds:
-      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update --kube-context {{.KUBE_CONTEXT}} -f values.yaml
-
-  dev-stop:
-    desc: Uninstall helm chart
-    cmds:
-      - helm uninstall dev -n featurebyte --kube-context {{.KUBE_CONTEXT}}
-
-  dev-down:
-    run: once
-    desc: Stop development environment
-    cmds:
-      - task: dev-stop
-      - task: k3d-stop
-
-  k3d-init:
-    desc: Initialize k3d cluster
-    run: once
-    ignore_error: true
-    interactive: true
-    status:
-      - k3d cluster list featurebyte
-    cmds:
-      - k3d cluster create featurebyte --api-port 6443 --port "80:80@loadbalancer" --port "443:80@loadbalancer" --registry-create featurebyte.localhost:10443
-
   k3d-start:
-    desc: Start k3d cluster
+    desc: "Create k3d cluster"
+    status:
+      - k3d cluster list {{.CLUSTER_NAME}} | awk 'NR!=1 {print $2}' | grep -Pq '([0-9]+)/\1'
     run: once
     cmds:
-      - k3d cluster start featurebyte
+      - docker volume create k3d-featurebyte-registry
+      - k3d cluster list {{.CLUSTER_NAME}} || k3d cluster create --config dev/k3d-config.yaml && k3d cluster start {{.CLUSTER_NAME}}
+      - task: k3d-traefik
 
   k3d-stop:
-    desc: Stop development environment
+    desc: "Stop k3d cluster"
+    run: once
     cmds:
-      - k3d cluster stop featurebyte
+      - k3d cluster stop {{.CLUSTER_NAME}}
+
+  k3d-traefik:
+    desc: "Add connection to k3d dashboard"
+    run: once
+    cmds:
+      - kubectl apply -f dev/traefik.yaml
+
+  k3d-delete:
+    desc: "Delete k3d cluster"
+    run: once
+    cmds:
+      - k3d cluster delete --config dev/k3d-config.yaml
+
+  k3d-context:
+    desc: "Set k3d context"
+    run: once
+    status:
+      - '[[ $(kubectl config current-context) == "{{.RAILGUARDS_KUBE_CONTEXT}}" ]]'
+    silent: true
+    cmds:
+      - cmd: |
+          if [[ "{{.RAILGUARDS_DISABLED}}" == "true" ]]; then
+            echo "[WARN] RAILGUARDS_DISABLED is set to true. Skipping k3d context setup."
+            exit 0
+          else
+            kubectl config use-context {{.RAILGUARDS_KUBE_CONTEXT}}
+          fi
 
   mongodb-operator:
     desc: Install MongoDB Operator
-    deps:
-      - k3d-start
     status:
-      - helm status community-operator -n {{.NAMESPACE}}
+      - helm status community-operator-crds -n default
+    deps:
+      - task: k3d-context
     cmds:
-      - helm upgrade community-operator community-operator --kube-context {{.KUBE_CONTEXT}} --namespace {{.NAMESPACE}} --create-namespace --install --repo=https://mongodb.github.io/helm-charts
+      - helm upgrade community-operator-crds community-operator-crds -n default --install --repo=https://mongodb.github.io/helm-charts
 
 # DEBUGGING COMMANDS
+  oss-dev:
+    desc: "Install featurebyte-oss in dev mode"
+    deps:
+      - task: k3d-context
   dev-local:
     dir: charts/featurebyte-oss
     cmds:
       - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --kube-context {{.KUBE_CONTEXT}} --dependency-update -f values.yaml,dev-values.yaml
+
   helm-template:
     dir: charts/featurebyte-oss
     cmds:

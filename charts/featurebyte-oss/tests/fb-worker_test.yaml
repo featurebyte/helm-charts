@@ -33,7 +33,7 @@ tests:
       - fb-worker/deployment-worker-cpu.yaml
       - fb-worker/deployment-worker-io.yaml
     set:
-      mongodb.enabled: true
+      mongodb.provider: "communityOperator"
     asserts:
       - isKind:
           of: Deployment
@@ -48,7 +48,7 @@ tests:
       - fb-worker/deployment-worker-cpu.yaml
       - fb-worker/deployment-worker-io.yaml
     set:
-      mongodb.enabled: false
+      mongodb.provider: "external"
     asserts:
       - isKind:
           of: Deployment
