@@ -225,5 +225,5 @@ Generated Envs
 - name: MINIO_ROOT_PASSWORD
   value: {{ .Values.s3.minio.rootPassword }}
 - name: MINIO_BUCKET_NAME
-  value: {{ .Values.s3.minio.bucket }}
+  value: {{ .Values.s3.minio.bucketName }}
 {{- end }}

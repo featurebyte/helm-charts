@@ -94,5 +94,9 @@ redis:
   external:
     connectionStr: "redis://external:6379"
 
+community-operator:
+  community-operator-crds:
+    enabled: false
+
 ingress:
   enabled: false

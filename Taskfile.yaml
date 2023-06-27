@@ -51,7 +51,7 @@ tasks:
           fi
 
   mongodb-operator:
-    desc: Install MongoDB Operator
+    desc: Install MongoDB Operator Crds
     status:
       - helm status community-operator-crds -n default
     deps:
@@ -60,19 +60,10 @@ tasks:
       - helm upgrade community-operator-crds community-operator-crds -n default --install --repo=https://mongodb.github.io/helm-charts
 
 # DEBUGGING COMMANDS
-  oss-dev:
-    desc: "Install featurebyte-oss in dev mode"
-    deps:
-      - task: k3d-context
-  dev-local:
-    dir: charts/featurebyte-oss
-    cmds:
-      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --kube-context {{.KUBE_CONTEXT}} --dependency-update -f values.yaml,dev-values.yaml
-
   helm-template:
     dir: charts/featurebyte-oss
     cmds:
-      - helm template featurebyte-oss . -n {{.NAMESPACE}} --kube-context {{.KUBE_CONTEXT}} --debug
+      - helm template featurebyte-oss . -n {{.NAMESPACE}} --debug
 
   test-plugins:
     internal: true
@@ -86,4 +77,23 @@ tasks:
     deps:
       - task: test-plugins
     cmds:
-      - helm unittest . 
+      - helm unittest .
+
+  oss-docker-build:
+    desc: "Build featurebyte-oss docker image"
+    dir: ../featurebyte  # This will only work if the repo are in the same level
+    cmds:
+      - docker buildx build . -f docker/Dockerfile -t registry.localhost:10443/featurebyte-server:latest --push
+
+  oss-dev:
+    desc: "Install featurebyte-oss in dev mode"
+    deps:
+      - task: k3d-start
+      - task: oss-docker-build
+      - task: k3d-context
+      - task: mongodb-operator
+    dir: charts/featurebyte-oss
+    cmds:
+      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
+
+

@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
         # To create the bucket first before starting the server
-        - name: fsBucket
+        - name: create-bucket
           image: minio/minio:latest
           command:
             - sh
