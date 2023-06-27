@@ -77,7 +77,7 @@ mongodb:
   # communityOperator or external
   provider: "communityOperator"
   communityOperator:
-    password: "<your-password>"
+    password: "your-password"
     passwordRef:
       # passwordRef takes precedence over password
       # if you set mongodb.passwordRef.enabled to true, mongodb.password will be IGNORED
