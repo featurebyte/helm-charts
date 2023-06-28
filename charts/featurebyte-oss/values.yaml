@@ -67,7 +67,7 @@ s3:
     rootPassword: "root_password"
     bucketName: "featurebyte"
   external:
-    endpoint: "<Endpoint>"
+    url: "<Url>"
     region: "<Region>"
     accessKey: "<AccessKey>"
     secretKey: "<SecretKey>"

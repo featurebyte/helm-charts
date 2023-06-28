@@ -195,7 +195,9 @@ Generated Envs
 
 {{- define "featurebyte-oss.env.s3" -}}
 {{- if eq .Values.s3.provider "minio" }}
-- name: S3_ENDPOINT
+- name: STORAGE_TYPE
+  value: s3
+- name: S3_URL
   value: "http://{{ include "featurebyte-oss.fullname" . }}-minio:9000"
 - name: S3_REGION_NAME
   value: ""
@@ -206,8 +208,10 @@ Generated Envs
 - name: S3_BUCKET_NAME
   value: {{ .Values.s3.minio.bucketName }}
 {{- else if eq .Values.s3.provider "external" }}
-- name: S3_ENDPOINT
-  value: {{ .Values.s3.external.endpoint }}
+- name: STORAGE_TYPE
+  value: s3
+- name: S3_URL
+  value: {{ .Values.s3.external.url }}
 - name: S3_REGION_NAME
   value: {{ .Values.s3.external.region }}
 - name: S3_ACCESS_KEY_ID

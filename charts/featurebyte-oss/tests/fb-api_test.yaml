@@ -151,15 +151,15 @@ tests:
       s3.provider: "minio"
     asserts:
       - matchRegex:
-          path: spec.template.spec.containers[0].env[?(@.name == "S3_ENDPOINT")].value
+          path: spec.template.spec.containers[0].env[?(@.name == "S3_URL")].value
           pattern: "^http://.+?-minio:9000$"
 
   - it: api using external
     template: fb-api/deployment.yaml
     set:
       s3.provider: "external"
-      s3.external.endpoint: "https://storage.googleapis.com"
+      s3.external.url: "https://storage.googleapis.com"
     asserts:
       - matchRegex:
-          path: spec.template.spec.containers[0].env[?(@.name == "S3_ENDPOINT")].value
+          path: spec.template.spec.containers[0].env[?(@.name == "S3_URL")].value
           pattern: "^https://storage.googleapis.com$"
