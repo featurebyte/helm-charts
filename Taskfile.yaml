@@ -73,6 +73,12 @@ tasks:
       - helm plugin install https://github.com/helm-unittest/helm-unittest.git
 
   test:
+    desc: "Run all tests"
+    cmds:
+      - task oss-test
+
+  oss-test:
+    desc: "Run featurebyte-oss tests"
     dir: charts/featurebyte-oss
     deps:
       - task: test-plugins
