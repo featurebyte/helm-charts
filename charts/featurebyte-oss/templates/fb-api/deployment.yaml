@@ -16,7 +16,7 @@ spec:
       serviceAccountName: {{ include "featurebyte-oss.serviceAccountName" . }}
       containers:
         - name: api
-          image: "{{ .Values.featurebyte.api.image.repository }}:{{ .Values.featurebyte.api.image.tag }}"
+          image: "{{ .Values.featurebyte.api.image.repository }}:{{ default .Chart.AppVersion .Values.featurebyte.api.image.tag }}"
           imagePullPolicy: {{ .Values.featurebyte.api.image.pullPolicy }}
           command: ["bash", "/docker-entrypoint.sh", "server"]
           env:

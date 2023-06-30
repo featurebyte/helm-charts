@@ -1,5 +1,4 @@
 # Global configuration
-imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -17,8 +16,7 @@ featurebyte:
     replicaCount: 1
     image:
       repository: "featurebyte/featurebyte-server"
-      pullPolicy: Always
-      tag: "latest"
+      pullPolicy: IfNotPresent
     resources:
        limits:
          memory: 2Gi
@@ -37,8 +35,9 @@ featurebyte:
     replicaCount: 1
     image:
       repository: "featurebyte/featurebyte-server"
-      pullPolicy: Always
-      tag: "latest"
+      pullPolicy: IfNotPresent
+      # Enable this to override the tag used
+      # tag: "latest"
     resources:
        requests:
          cpu: 1000m

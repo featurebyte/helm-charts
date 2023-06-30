@@ -9,9 +9,9 @@ tests:
       - matchRegex:
           path: metadata.name
           pattern: -api$
-      - equal:
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: featurebyte/featurebyte-server:latest
+          pattern: ^featurebyte/featurebyte-server
   - it: api image changes
     template: fb-api/deployment.yaml
     set:
@@ -163,3 +163,22 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[0].env[?(@.name == "S3_URL")].value
           pattern: "^https://storage.googleapis.com$"
+
+  - it: test image used
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.api.image.repository: "featurebyte/featurebyte-server"
+      featurebyte.api.image.tag: "test"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "featurebyte/featurebyte-server:test"
+
+  - it: appVersion image used
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.api.image.repository: "featurebyte/featurebyte-server"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "featurebyte/featurebyte-server:0.3.1"  # Might need to update this if the appVersion changes
