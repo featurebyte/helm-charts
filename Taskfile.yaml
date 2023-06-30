@@ -88,6 +88,8 @@ tasks:
   oss-docker-build:
     desc: "Build featurebyte-oss docker image"
     dir: ../featurebyte  # This will only work if the repo are in the same level
+    deps:
+      - task: k3d-start
     cmds:
       - docker buildx build . -f docker/Dockerfile -t registry.localhost:10443/featurebyte-server:latest --push
 
