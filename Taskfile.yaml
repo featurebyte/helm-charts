@@ -102,4 +102,8 @@ tasks:
     cmds:
       - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
 
-
+  oss-wait:
+    desc: "Wait for featurebyte-oss to be ready"
+    dir: charts/featurebyte-oss
+    cmds:
+      - kubectl wait --for=condition=Ready pods --all -n {{.NAMESPACE}} --timeout=450s && echo "All ready" || { echo "Failed to start"; kubectl get all -n {{.NAMESPACE}}; exit 1; }
