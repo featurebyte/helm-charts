@@ -14,7 +14,7 @@ spec:
       serviceAccountName: {{ include "featurebyte-oss.serviceAccountName" . }}
       containers:
         - name: worker
-          image: {{ .Values.featurebyte.worker.image.repository }}:{{ .Values.featurebyte.worker.image.tag }}
+          image: {{ .Values.featurebyte.worker.image.repository }}:{{ default .Chart.AppVersion .Values.featurebyte.api.image.tag }}
           imagePullPolicy: {{ .Values.featurebyte.worker.image.pullPolicy }}
           command: ["bash", "/docker-entrypoint.sh", "worker:cpu"]
           env:

@@ -2,9 +2,13 @@ featurebyte:
   api:
     image:
       repository: "registry.localhost:10443/featurebyte-server"
+      tag: "latest"
+      pullPolicy: Always
   worker:
     image:
       repository: "registry.localhost:10443/featurebyte-server"
+      tag: "latest"
+      pullPolicy: Always
 
 # The mongodb crds are installed by default by an external chart
 # Disable the installation of the mongodb crds
