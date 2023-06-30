@@ -1,0 +1,68 @@
+name: "test"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run helm unittest (featurebyte-oss)
+        uses: d3adb5/helm-unittest-action@v2
+        with:
+          helm-version: v3.12.0
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  deploy-test:
+    runs-on: ubuntu-latest-4-cores
+    steps:
+      - name: clone helm-charts
+        uses: actions/checkout@v3
+        with:
+          repository: featurebyte/helm-charts
+          path: helm-charts
+      - name: clone featurebyte
+        uses: actions/checkout@v3
+        with:
+          repository: featurebyte/featurebyte
+          ref: main
+          path: featurebyte
+      - uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          version: 3.x
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8.12
+      - name: Setup cache
+        uses: actions/cache@v3
+        with:
+          key: poetry-cache-${{ runner.os }}-${{ matrix.python-version }}-${{ github.job }}
+          path: featurebyte/.venv
+          restore-keys: poetry-cache-${{ runner.os }}-${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: 1.5.1
+      - name: Setup k3d
+        run: |-
+          wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+          docker volume create k3d-featurebyte-registry
+      - name: Add Application Hostnames
+        run: |-
+          sudo echo "127.0.0.1 app.featurebyte.localhost" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 mongo.featurebyte.localhost" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 registry.localhost" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 featurebyte.localhost" | sudo tee -a /etc/hosts
+      - name: Build docker image
+        run: |-
+          cd helm-charts && task oss-docker-build
+      - name: Run dev cluster
+        run: |-
+          cd helm-charts && task oss-dev
+      - name: Wait for dev cluster
+        run: |-
+          cd helm-charts && task oss-wait

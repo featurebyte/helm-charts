@@ -33,7 +33,7 @@ tests:
       - fb-worker/deployment-worker-cpu.yaml
       - fb-worker/deployment-worker-io.yaml
     set:
-      mongodb.enabled: true
+      mongodb.provider: "communityOperator"
     asserts:
       - isKind:
           of: Deployment
@@ -48,7 +48,7 @@ tests:
       - fb-worker/deployment-worker-cpu.yaml
       - fb-worker/deployment-worker-io.yaml
     set:
-      mongodb.enabled: false
+      mongodb.provider: "external"
     asserts:
       - isKind:
           of: Deployment
@@ -56,3 +56,28 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[0].env[?(@.name == "MONGODB_URI")].valueFrom.secretKeyRef.name
           pattern: -mongodb-external$
+
+  - it: workers using minio
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
+    set:
+      s3.provider: "minio"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "S3_URL")].value
+          pattern: "^http://.+?-minio:9000$"
+
+  - it: workers using external
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
+    set:
+      s3.provider: "external"
+      s3.external.url: "https://storage.googleapis.com"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].env[?(@.name == "S3_URL")].value
+          pattern: "^https://storage.googleapis.com$"

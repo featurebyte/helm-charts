@@ -23,7 +23,7 @@ featurebyte:
        limits:
          memory: 2Gi
        requests:
-         cpu: 1000m
+         cpu: 500m
          memory: 2Gi
     autoscaling:
       enabled: true
@@ -39,13 +39,10 @@ featurebyte:
       repository: "featurebyte/featurebyte-server"
       pullPolicy: Always
       tag: "latest"
-    resources: {}
-      # limits:
-      #   cpu: 100m
-      #   memory: 128Mi
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+    resources:
+       requests:
+         cpu: 1000m
+         memory: 1024Mi
     autoscaling:
       enabled: false
       minReplicas: 1
@@ -57,28 +54,54 @@ featurebyte:
     tolerations: []
     affinity: {}
 
-minio:
-  enabled: true
+s3:
+  # Use minio for local development
+  # Productionize switch to an external s3 provider
+  # minio or external
+  provider: minio
+  minio:
+    rootUser: "root_user"
+    rootPassword: "root_password"
+    bucketName: "featurebyte"
+  # External s3 provider
+  # Provide your S3 credentials and config here
+  external:
+    url: "<Url>"
+    region: "<Region>"
+    accessKey: "<AccessKey>"
+    secretKey: "<SecretKey>"
+    bucketName: "<BucketName>"
 
 mongodb:
-  enabled: true
-  password: "<your-password>"
-  passwordRef:
-    # passwordRef takes precedence over password
-    # if you set mongodb.passwordRef.enabled to true, mongodb.password will be IGNORED
-    enabled: false
-    name: ""
-    key: "password"
-  # If mongodb is disabled, you would need to specify a mongodb connection str to connect
-  # to an external mongodb instance. External mongodb must have a replicaset architecture.
+  # communityOperator or external
+  provider: "communityOperator"
+  communityOperator:
+    password: "your-password"
+    passwordRef:
+      # passwordRef takes precedence over password
+      # if you set mongodb.passwordRef.enabled to true, mongodb.password will be IGNORED
+      enabled: false
+      name: ""
+      key: "password"
+  # To setup mongodb external, you would need to specify a mongodb connection str to connect
+  # The mongodb server will create and use a database called `featurebyte`
   external:
-    connectionStr: "mongodb://external:27017"
+    connectionStr: "mongodb://<Account>:<Password>external:27017/"
 
 redis:
-  enabled: true
-  # If reids is disabled, you would need to specify a redis connection str to connect
+  # standalone or external
+  provider: "standalone"
+  # If redis is disabled, you would need to specify a redis connection str to connect
   external:
     connectionStr: "redis://external:6379"
 
+# Mongodb Community Operator
+community-operator:
+  community-operator-crds:
+    enabled: true
+
+# Sample ingress configuration
+# Disable this ingress and use your own ingress configuration
 ingress:
   enabled: false
+  # host: featurebyte.localhost

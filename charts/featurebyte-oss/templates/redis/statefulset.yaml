@@ -1,4 +1,4 @@
-{{- if .Values.redis.enabled }}
+{{- if eq .Values.redis.provider "standalone" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -34,5 +34,5 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 4Gi
+            storage: 1Gi
 {{- end }}

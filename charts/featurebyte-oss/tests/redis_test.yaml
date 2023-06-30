@@ -4,7 +4,7 @@ tests:
   - it: redis deployment exists
     template: redis/statefulset.yaml
     set:
-      redis.enabled: true
+      redis.provider: "standalone"
     asserts:
       - isKind:
           of: StatefulSet
@@ -15,7 +15,7 @@ tests:
   - it: redis deployment is missing
     template: redis/statefulset.yaml
     set:
-      redis.enabled: false
+      redis.provider: "external"
     asserts:
       - hasDocuments:
           count: 0
@@ -23,7 +23,7 @@ tests:
   - it: redis service[headless] exists
     template: redis/service.yaml
     set:
-      redis.enabled: true
+      redis.provider: "standalone"
     documentIndex: 0
     asserts:
       - isKind:
@@ -35,7 +35,7 @@ tests:
   - it: redis service exists
     template: redis/service.yaml
     set:
-      redis.enabled: true
+      redis.provider: "standalone"
     documentIndex: 1
     asserts:
       - isKind:
@@ -47,7 +47,7 @@ tests:
   - it: redis service is enabled
     template: redis/service.yaml
     set:
-      redis.enabled: true
+      redis.provider: "standalone"
     asserts:
       - hasDocuments:
           count: 2
@@ -55,7 +55,7 @@ tests:
   - it: redis service is disabled
     template: redis/service.yaml
     set:
-      redis.enabled: false
+      redis.provider: "external"
     asserts:
       - hasDocuments:
           count: 0

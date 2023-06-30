@@ -15,4 +15,7 @@ spec:
                 name: {{ include "featurebyte-oss.fullname" . }}-api
                 port:
                   number: 8088
+      {{- if .Values.ingress.host }}
+      host: {{ .Values.ingress.host }}
+      {{- end }}
 {{- end }}

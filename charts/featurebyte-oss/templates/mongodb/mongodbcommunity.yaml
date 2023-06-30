@@ -1,4 +1,4 @@
-{{- if .Values.mongodb.enabled -}}
+{{- if eq .Values.mongodb.provider "communityOperator" -}}
 apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
 metadata:
@@ -14,10 +14,10 @@ spec:
   users:
     - name: featurebyte
       db: admin
-      {{- if .Values.mongodb.passwordRef.enabled }}
+      {{- if .Values.mongodb.communityOperator.passwordRef.enabled }}
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
-        name: {{ .Values.mongodb.passwordRef.name }}
-        key: {{ .Values.mongodb.passwordRef.key }}
+        name: {{ .Values.mongodb.communityOperator.passwordRef.name }}
+        key: {{ .Values.mongodb.communityOperator.passwordRef.key }}
       {{- else }}
       passwordSecretRef: # a reference to the secret that will be used to generate the user's password
         name: {{ include "featurebyte-oss.fullname" . }}-mongodb

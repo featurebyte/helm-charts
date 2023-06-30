@@ -1,10 +1,16 @@
 featurebyte:
   api:
     image:
-      repository: "featurebyte.localhost:10443/featurebyte-server"
+      repository: "registry.localhost:10443/featurebyte-server"
   worker:
     image:
-      repository: "featurebyte.localhost:10443/featurebyte-server"
+      repository: "registry.localhost:10443/featurebyte-server"
+
+# The mongodb crds are installed by default by an external chart
+# Disable the installation of the mongodb crds
+community-operator:
+  community-operator-crds:
+    enabled: false
 
 # Enable access to localhost:80 to connect to the featurebyte-api server
 ingress:
