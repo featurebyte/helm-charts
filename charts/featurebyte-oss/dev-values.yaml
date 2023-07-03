@@ -10,6 +10,10 @@ featurebyte:
       tag: "latest"
       pullPolicy: Always
 
+mongodb:
+  communityOperator:
+    cicd: true
+
 # Enable access to localhost:80 to connect to the featurebyte-api server
 ingress:
   enabled: true
