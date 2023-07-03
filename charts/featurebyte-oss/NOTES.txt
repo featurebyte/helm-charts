@@ -1,0 +1,16 @@
+You have installed featurebyte-oss with the following options:
+mongodb: {{ .Values.mongodb.provider }}
+redis:   {{ .Values.redis.provider }}
+s3:      {{ .Values.s3.provider }}
+---
+Configure your featurebyte python SDK with the following options:
+```yaml
+# ~/.featurebyte/config.yaml
+
+profile:
+  - name: local
+    api_url: http://<INGRESS_HOST>
+
+logging:
+  level: INFO
+```

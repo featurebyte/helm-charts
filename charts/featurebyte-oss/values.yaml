@@ -103,4 +103,4 @@ community-operator:
 # Disable this ingress and use your own ingress configuration
 ingress:
   enabled: false
-  # host: featurebyte.localhost
+  host: app.featurebyte.localhost
