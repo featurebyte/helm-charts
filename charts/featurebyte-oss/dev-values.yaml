@@ -10,12 +10,6 @@ featurebyte:
       tag: "latest"
       pullPolicy: Always
 
-# The mongodb crds are installed by default by an external chart
-# Disable the installation of the mongodb crds
-community-operator:
-  community-operator-crds:
-    enabled: false
-
 # Enable access to localhost:80 to connect to the featurebyte-api server
 ingress:
   enabled: true
