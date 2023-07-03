@@ -38,5 +38,7 @@ jobs:
         run: |
           cd gh-pages/
           helm repo index . --url https://featurebyte.github.io/helm-charts/
+          git add .
           git commit -am "Updating helm charts to ${{ env.VERSION }} from ${{ github.sha }}"
-          git push origin gh-pages
+          git tag 'featurebyte-oss-v${{ env.VERSION }}'
+          git push origin --all -v
