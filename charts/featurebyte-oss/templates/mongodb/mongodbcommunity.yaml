@@ -26,6 +26,29 @@ spec:
         - name: readWriteAnyDatabase
           db: admin
       scramCredentialsSecretName: {{ include "featurebyte-oss.fullname" . }}-mongodb-scram
+  {{- if .Values.mongodb.communityOperator.cicd }}
+  statefulset:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mongod
+              resources:
+                limits:
+                  cpu: 0m
+                  memory: 0Mi
+                requests:
+                  cpu: 0m
+                  memory: 0Mi
+            - name: mongodb-agent
+              resources:
+                limits:
+                  cpu: 0m
+                  memory: 0Mi
+                requests:
+                  cpu: 0m
+                  memory: 0Mi
+  {{- end }}
   additionalMongodConfig:
     # the additional config passed to the mongod process can be specified
     # either in nested or dot notation

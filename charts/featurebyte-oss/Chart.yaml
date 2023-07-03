@@ -4,8 +4,6 @@ description: A Helm chart for Kubernetes
 maintainers:
   - name: featurebyte
     email: it-admin@featurebyte.com
-  - name: chester
-    email: chester@featurebyte.com
 type: application
 version: 0.1.0
 appVersion: "0.3.1"

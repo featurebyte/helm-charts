@@ -97,10 +97,10 @@ redis:
 # Mongodb Community Operator
 community-operator:
   community-operator-crds:
-    enabled: true
+    enabled: false
 
 # Sample ingress configuration
 # Disable this ingress and use your own ingress configuration
 ingress:
   enabled: false
-  # host: featurebyte.localhost
+  host: app.featurebyte.localhost
