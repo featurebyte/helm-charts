@@ -1,0 +1,42 @@
+name: "release"
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  helm-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setting up git config
+        run: |
+          git config --global user.name "featurebyte"
+          git config --global user.email "it-admin@featurebyte.com"
+      - uses: actions/checkout@v3
+        with:
+          path: candidate
+      - uses: actions/checkout@v3
+        with:
+          path: gh-pages
+          ref: gh-pages
+      - uses: azure/setup-helm@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Packaging helm charts
+        run: |
+          cd candidate/
+          echo "VERSION=$(yq '.version' charts/featurebyte-oss/Chart.yaml)" >> "$GITHUB_ENV"
+          helm package charts/featurebyte-oss --destination=release/ --dependency-update
+
+          # Move without replacement
+          mv -n release/*.tgz ../gh-pages/release/
+
+      - name: Adding helm charts to index
+        run: |
+          cd gh-pages/
+          helm repo index . --url https://featurebyte.github.io/helm-charts/
+          git commit -am "Updating helm charts"
+          git push origin gh-pages
