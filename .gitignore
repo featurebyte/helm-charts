@@ -1,1 +1,5 @@
+# Intellij
 .idea/
+
+# Chart Releaser
+.cr-release-packages/
