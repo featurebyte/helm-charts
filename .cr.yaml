@@ -1,0 +1,8 @@
+owner: featurebyte
+git-repo: helm-charts
+package-path: .cr-release-packages
+git-base-url: https://api.github.com/
+git-upload-url: https://uploads.github.com/
+package-with-index: true
+skip-existing: true
+push: true

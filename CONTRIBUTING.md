@@ -16,5 +16,6 @@ You can check that the server is up with
 
 ```bash
 curl localhost/status
-curl localhost/api/v1/status
 ```
+
+### Uploading a new Version
