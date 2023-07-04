@@ -12,7 +12,14 @@ featurebyte:
 
 mongodb:
   communityOperator:
-    cicd: true
+    persistence:
+      storageClass: "local-path"
+      dataSize: "1G"
+      logSize: "200M"
+
+community-operator:
+  registry:
+    pullPolicy: IfNotPresent
 
 # Enable access to localhost:80 to connect to the featurebyte-api server
 ingress:
