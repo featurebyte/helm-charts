@@ -111,3 +111,33 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: mongodb community storage size
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.persistence.dataSize: "15G"
+    asserts:
+      - equal:
+          path: spec.statefulSet.spec.volumeClaimTemplates[?(@.metadata.name == "data-volume")].spec.resources.requests.storage
+          value: "15G"
+
+  - it: mongodb community log size
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.persistence.logSize: "11G"
+    asserts:
+      - equal:
+          path: spec.statefulSet.spec.volumeClaimTemplates[?(@.metadata.name == "logs-volume")].spec.resources.requests.storage
+          value: "11G"
+
+  - it: mongodb community storageclass
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.persistence.storageClassName: "local-path"
+    asserts:
+      - equal:
+          path: spec.statefulSet.spec.volumeClaimTemplates[*].spec.storageClassName
+          value: "local-path"

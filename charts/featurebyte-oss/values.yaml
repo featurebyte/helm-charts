@@ -17,6 +17,8 @@ featurebyte:
     image:
       repository: "featurebyte/featurebyte-server"
       pullPolicy: IfNotPresent
+      # Enable this to override the tag used (defaulted to Chart.appVersion)
+      # tag: "latest"
     resources:
        limits:
          memory: 2Gi
@@ -36,7 +38,7 @@ featurebyte:
     image:
       repository: "featurebyte/featurebyte-server"
       pullPolicy: IfNotPresent
-      # Enable this to override the tag used
+      # Enable this to override the tag used (defaulted to Chart.appVersion)
       # tag: "latest"
     resources:
        requests:
@@ -75,6 +77,11 @@ mongodb:
   # communityOperator or external
   provider: "communityOperator"
   communityOperator:
+    # Mongodb Community operator persistence settings
+    persistence:
+      storageClassName: "standard"
+      dataSize: "10G"
+      logSize: "2G"
     password: "your-password"
     passwordRef:
       # passwordRef takes precedence over password
@@ -98,6 +105,8 @@ redis:
 community-operator:
   community-operator-crds:
     enabled: false
+  registry:
+    pullPolicy: IfNotPresent
 
 # Sample ingress configuration
 # Disable this ingress and use your own ingress configuration
