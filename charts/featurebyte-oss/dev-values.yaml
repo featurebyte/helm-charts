@@ -20,7 +20,7 @@ s3:
 mongodb:
   communityOperator:
     persistence:
-      storageClassName: "local-path"
+      storageClass: "local-path"
       dataSize: "1G"
       logSize: "200M"
 
