@@ -10,6 +10,13 @@ featurebyte:
       tag: "latest"
       pullPolicy: Always
 
+s3:
+  minio:
+    persistence:
+      storageClass: "local-path"
+      size: "1G"
+
+
 mongodb:
   communityOperator:
     persistence:

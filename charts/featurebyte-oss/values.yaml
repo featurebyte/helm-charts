@@ -64,6 +64,13 @@ s3:
     rootUser: "root_user"
     rootPassword: "root_password"
     bucketName: "featurebyte"
+    image:
+      repository: "minio/minio"
+      pullPolicy: IfNotPresent
+      tag: "RELEASE.2023-06-29T05-12-28Z"
+    persistence:
+      size: "4Gi"
+      storageClass: "standard"
   # External s3 provider
   # Provide your S3 credentials and config here
   external:

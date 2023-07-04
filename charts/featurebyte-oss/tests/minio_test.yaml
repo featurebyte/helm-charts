@@ -59,3 +59,23 @@ tests:
     asserts:
       - hasDocuments:
           count: 2
+
+  - it: minio persistence size is set
+    template: minio/statefulset.yaml
+    set:
+      s3.provider: "minio"
+      s3.minio.persistence.size: "4Gi"
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.resources.requests.storage
+          value: "4Gi"
+
+  - it: minio persistence storageClass
+    template: minio/statefulset.yaml
+    set:
+      s3.provider: "minio"
+      s3.minio.persistence.storageClass: "my-storage-class"
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.storageClassName
+          value: "my-storage-class"
