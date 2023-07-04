@@ -13,7 +13,7 @@ featurebyte:
 mongodb:
   communityOperator:
     persistence:
-      storageClass: "local-path"
+      storageClassName: "local-path"
       dataSize: "1G"
       logSize: "200M"
 

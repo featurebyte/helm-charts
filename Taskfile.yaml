@@ -97,11 +97,11 @@ tasks:
     desc: "Install featurebyte-oss in dev mode"
     deps:
       - task: k3d-start
-      - task: oss-docker-build
-      - task: k3d-context
-      - task: mongodb-operator
     dir: charts/featurebyte-oss
     cmds:
+      - task: k3d-context
+      - task: mongodb-operator
+      - task: oss-docker-build
       - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
 
   oss-wait:
