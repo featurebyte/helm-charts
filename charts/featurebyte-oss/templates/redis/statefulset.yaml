@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: redis
-          image: "redis:7"
+          image: "{{ .Values.redis.standalone.image.repository }}:{{ .Values.redis.standalone.image.tag }}"
+          imagePullPolicy: {{ .Values.redis.standalone.image.pullPolicy }}
           command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
           ports:
             - name: redis
@@ -34,5 +35,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 1Gi
+            storage: {{ .Values.redis.standalone.persistence.size }}
+        storageClassName: {{ .Values.redis.standalone.persistence.storageClass }}
 {{- end }}

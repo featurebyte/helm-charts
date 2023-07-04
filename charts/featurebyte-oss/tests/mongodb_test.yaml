@@ -136,7 +136,7 @@ tests:
     template: mongodb/mongodbcommunity.yaml
     set:
       mongodb.provider: "communityOperator"
-      mongodb.communityOperator.persistence.storageClassName: "local-path"
+      mongodb.communityOperator.persistence.storageClass: "local-path"
     asserts:
       - equal:
           path: spec.statefulSet.spec.volumeClaimTemplates[*].spec.storageClassName

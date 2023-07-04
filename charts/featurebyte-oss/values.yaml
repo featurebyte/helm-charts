@@ -79,7 +79,7 @@ mongodb:
   communityOperator:
     # Mongodb Community operator persistence settings
     persistence:
-      storageClassName: "standard"
+      storageClass: "standard"
       dataSize: "10G"
       logSize: "2G"
     password: "your-password"
@@ -97,6 +97,15 @@ mongodb:
 redis:
   # standalone or external
   provider: "standalone"
+  standalone:
+    image:
+      repository: "redis"
+      pullPolicy: IfNotPresent
+      # Enable this to override the tag used (defaulted to Chart.appVersion)
+      tag: "7.0"
+    persistence:
+      storageClass: "standard"
+      size: "1Gi"
   # If redis is disabled, you would need to specify a redis connection str to connect
   external:
     connectionStr: "redis://external:6379"
