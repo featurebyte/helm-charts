@@ -59,3 +59,23 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: redis persistence size
+    template: redis/statefulset.yaml
+    set:
+      redis.provider: "standalone"
+      redis.standalone.persistence.size: "3G"
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.resources.requests.storage
+          value: "3G"
+
+  - it: redis persistence storageClassName
+    template: redis/statefulset.yaml
+    set:
+      redis.provider: "standalone"
+      redis.standalone.persistence.storageClass: "my-storage-class"
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.storageClassName
+          value: "my-storage-class"

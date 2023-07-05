@@ -28,7 +28,8 @@ spec:
               mountPath: /data
       containers:
         - name: minio
-          image: minio/minio:latest
+          image: "{{ .Values.s3.minio.image.repository }}:{{ .Values.s3.minio.image.tag }}"
+          imagePullPolicy: {{ .Values.s3.minio.image.pullPolicy }}
           command:
             - minio
             - server
@@ -54,5 +55,6 @@ spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 10Gi
+            storage: {{ .Values.s3.minio.persistence.size }}
+        storageClassName: {{ .Values.s3.minio.persistence.storageClass }}
 {{- end }}

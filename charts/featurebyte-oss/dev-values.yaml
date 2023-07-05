@@ -10,12 +10,25 @@ featurebyte:
       tag: "latest"
       pullPolicy: Always
 
+s3:
+  minio:
+    persistence:
+      storageClass: "local-path"
+      size: "1G"
+
+
 mongodb:
   communityOperator:
     persistence:
-      storageClassName: "local-path"
+      storageClass: "local-path"
       dataSize: "1G"
       logSize: "200M"
+
+redis:
+  standalone:
+    persistence:
+      storageClass: "local-path"
+      size: "200M"
 
 community-operator:
   registry:
