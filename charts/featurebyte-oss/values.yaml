@@ -33,7 +33,7 @@ featurebyte:
       # tag: "latest"
     resources:
        requests:
-         cpu: 500m
+         cpu: 1000m
          memory: 2Gi
     autoscaling:
       enabled: true

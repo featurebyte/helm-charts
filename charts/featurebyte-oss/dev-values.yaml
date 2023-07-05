@@ -4,18 +4,25 @@ featurebyte:
       repository: "registry.localhost:10443/featurebyte-server"
       tag: "latest"
       pullPolicy: Always
+    resources:
+      requests:
+        cpu: 0
+        memory: 0
   worker:
     image:
       repository: "registry.localhost:10443/featurebyte-server"
       tag: "latest"
       pullPolicy: Always
+    resources:
+      requests:
+        cpu: 0
+        memory: 0
 
 s3:
   minio:
     persistence:
       storageClass: "local-path"
       size: "1G"
-
 
 mongodb:
   communityOperator:
