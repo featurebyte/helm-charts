@@ -231,3 +231,13 @@ Generated Envs
 - name: MINIO_BUCKET_NAME
   value: {{ .Values.s3.minio.bucketName }}
 {{- end }}
+
+{{/*
+Enable only if krb is enabled
+*/}}
+{{- define "featurebyte-oss.env.keberos" -}}
+- name: KRB5_REALM
+  value: {{ .Values.featurebyte.kerberos.realm }}
+- name: KRB5_KDC
+  value: {{ .Values.featurebyte.kerberos.kdc }}
+{{- end }}

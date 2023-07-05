@@ -182,3 +182,33 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: "featurebyte/featurebyte-server:0.3.1"  # Might need to update this if the appVersion changes
+
+  - it: kerberos enabled with env values
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.kerberos.enabled: true
+      featurebyte.kerberos.realm: "TESTING.COM"
+      featurebyte.kerberos.kdc: "kdc.testing.com"
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")]
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")].value
+          value: "TESTING.COM"
+      - isNotNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")]
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")].value
+          value: "kdc.testing.com"
+
+  - it: kerberos disabled
+    template: fb-api/deployment.yaml
+    set:
+      featurebyte.kerberos.enabled: false
+      featurebyte.kerberos.realm: "TESTING.COM"
+      featurebyte.kerberos.kdc: "kdc.testing.com"
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")]
+      - isNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")]

@@ -11,7 +11,19 @@ serviceAccount:
 
 # Featurebyte configuration
 featurebyte:
-  securityContext: {}
+  # Kerberos setup for api and workers
+  # If enabled, a KRB5_CONFIG file will be written out
+  # ------ /app/krb5.conf ------
+  # [libdefaults]
+  # default_realm = ${KRB5_REALM}
+  # [realms]
+  # ${KRB5_REALM} = {
+  #   kdc = ${KRB5_KDC}
+  # }
+  kerberos:
+    enabled: false
+    realm: "EXAMPLE.COM"
+    kdc: "kdc.example.com"
   api:
     replicaCount: 1
     image:
