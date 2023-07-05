@@ -24,4 +24,6 @@ spec:
             {{- if .Values.featurebyte.kerberos.enabled }}
             {{- include "featurebyte-oss.env.keberos" . | nindent 12 }}
             {{- end }}
+          resources:
+            {{- toYaml .Values.featurebyte.worker.resources | nindent 12 }}
       {{- include "featurebyte-oss.podAffinity.worker" . | indent 4 }}

@@ -13,6 +13,7 @@ spec:
     metadata:
       labels: {{ include "featurebyte-oss.labels.minio" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "featurebyte-oss.serviceAccountName" . }}
       initContainers:
         # To create the bucket first before starting the server
         - name: create-bucket

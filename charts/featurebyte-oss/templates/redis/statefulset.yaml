@@ -13,6 +13,7 @@ spec:
     metadata:
       labels: {{ include "featurebyte-oss.labels.redis" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ include "featurebyte-oss.serviceAccountName" . }}
       containers:
         - name: redis
           image: "{{ .Values.redis.standalone.image.repository }}:{{ .Values.redis.standalone.image.tag }}"

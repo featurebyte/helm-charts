@@ -32,8 +32,6 @@ featurebyte:
       # Enable this to override the tag used (defaulted to Chart.appVersion)
       # tag: "latest"
     resources:
-       limits:
-         memory: 2Gi
        requests:
          cpu: 500m
          memory: 2Gi
@@ -69,7 +67,7 @@ featurebyte:
 
 s3:
   # Use minio for local development
-  # Productionize switch to an external s3 provider
+  # To productionise switch to an external s3 provider
   # minio or external
   provider: minio
   minio:
