@@ -83,7 +83,10 @@ tests:
           pattern: "^https://storage.googleapis.com$"
 
   - it: test image used
-    template: fb-api/deployment.yaml
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
     set:
       featurebyte.api.image.repository: "featurebyte/featurebyte-server"
       featurebyte.api.image.tag: "test"
@@ -93,10 +96,49 @@ tests:
           value: "featurebyte/featurebyte-server:test"
 
   - it: appVersion image used
-    template: fb-api/deployment.yaml
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
     set:
       featurebyte.api.image.repository: "featurebyte/featurebyte-server"
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
           value: "featurebyte/featurebyte-server:0.3.1"  # Might need to update this if the appVersion changes
+
+  - it: kerberos enabled with env values
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
+    set:
+      featurebyte.kerberos.enabled: true
+      featurebyte.kerberos.realm: "TESTING.COM"
+      featurebyte.kerberos.kdc: "kdc.testing.com"
+    asserts:
+      - isNotNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")]
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")].value
+          value: "TESTING.COM"
+      - isNotNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")]
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")].value
+          value: "kdc.testing.com"
+
+  - it: kerberos disabled
+    templates:
+      - fb-worker/deployment-scheduler.yaml
+      - fb-worker/deployment-worker-cpu.yaml
+      - fb-worker/deployment-worker-io.yaml
+    set:
+      featurebyte.kerberos.enabled: false
+      featurebyte.kerberos.realm: "TESTING.COM"
+      featurebyte.kerberos.kdc: "kdc.testing.com"
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")]
+      - isNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")]

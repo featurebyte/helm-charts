@@ -11,7 +11,19 @@ serviceAccount:
 
 # Featurebyte configuration
 featurebyte:
-  securityContext: {}
+  # Kerberos setup for api and workers
+  # If enabled, a KRB5_CONFIG file will be written out
+  # ------ /app/krb5.conf ------
+  # [libdefaults]
+  # default_realm = ${KRB5_REALM}
+  # [realms]
+  # ${KRB5_REALM} = {
+  #   kdc = ${KRB5_KDC}
+  # }
+  kerberos:
+    enabled: false
+    realm: "EXAMPLE.COM"
+    kdc: "kdc.example.com"
   api:
     replicaCount: 1
     image:
@@ -20,10 +32,8 @@ featurebyte:
       # Enable this to override the tag used (defaulted to Chart.appVersion)
       # tag: "latest"
     resources:
-       limits:
-         memory: 2Gi
        requests:
-         cpu: 500m
+         cpu: 1000m
          memory: 2Gi
     autoscaling:
       enabled: true
@@ -57,7 +67,7 @@ featurebyte:
 
 s3:
   # Use minio for local development
-  # Productionize switch to an external s3 provider
+  # To productionise switch to an external s3 provider
   # minio or external
   provider: minio
   minio:
