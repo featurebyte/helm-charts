@@ -102,7 +102,7 @@ tasks:
       - task: k3d-context
       - task: mongodb-operator
       - task: oss-docker-build
-      - helm upgrade dev . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
+      - helm upgrade featurebyte-oss . -n {{.NAMESPACE}} --create-namespace --install --dependency-update -f values.yaml,dev-values.yaml
 
   oss-wait:
     desc: "Wait for featurebyte-oss to be ready"
