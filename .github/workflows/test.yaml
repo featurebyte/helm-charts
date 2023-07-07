@@ -20,7 +20,8 @@ jobs:
           helm-version: v3.12.0
           github-token: ${{ secrets.GITHUB_TOKEN }}
   deploy-test:
-    runs-on: ubuntu-latest-4-16
+    runs-on:
+      group: Public Runners
     timeout-minutes: 30
     steps:
       - name: clone helm-charts
