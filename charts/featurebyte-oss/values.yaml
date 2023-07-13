@@ -91,6 +91,7 @@ s3:
     bucketName: "<BucketName>"
 
 mongodb:
+  reduceResource: false
   # communityOperator or external
   provider: "communityOperator"
   communityOperator:

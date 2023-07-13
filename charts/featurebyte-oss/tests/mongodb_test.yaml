@@ -141,3 +141,37 @@ tests:
       - equal:
           path: spec.statefulSet.spec.volumeClaimTemplates[*].spec.storageClassName
           value: "local-path"
+
+  - it: mongodb community reduce resources
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.reduceResource: true
+    asserts:
+      - equal:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.requests.memory
+          value: 0Mi
+      - equal:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.requests.cpu
+          value: 0m
+      - equal:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.limits.memory
+          value: 0Mi
+      - equal:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.limits.cpu
+          value: 0m
+
+  - it: mongodbcommunity reduce resources disabled
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.reduceResource: false
+    asserts:
+      - isNull:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.requests.memory
+      - isNull:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.requests.cpu
+      - isNull:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.limits.memory
+      - isNull:
+          path: spec.statefulSet.spec.template.spec.containers[*].resources.limits.cpu
