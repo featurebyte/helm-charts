@@ -43,6 +43,27 @@ spec:
               requests:
                 storage: {{ .Values.mongodb.communityOperator.persistence.logSize | quote }}
             storageClassName: {{ .Values.mongodb.communityOperator.persistence.storageClass }}
+      {{- if .Values.mongodb.reduceResource }}
+      template:
+        spec:
+          containers:
+            - name: mongod
+              resources:
+                limits:
+                  cpu: 0m
+                  memory: 0Mi
+                requests:
+                  cpu: 0m
+                  memory: 0Mi
+            - name: mongodb-agent
+              resources:
+                limits:
+                  cpu: 0m
+                  memory: 0Mi
+                requests:
+                  cpu: 0m
+                  memory: 0Mi
+      {{- end }}
   additionalMongodConfig:
     # the additional config passed to the mongod process can be specified
     # either in nested or dot notation

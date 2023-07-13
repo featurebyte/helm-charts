@@ -25,6 +25,7 @@ s3:
       size: "1G"
 
 mongodb:
+  reduceResources: true
   communityOperator:
     persistence:
       storageClass: "local-path"
