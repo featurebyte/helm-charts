@@ -1,4 +1,4 @@
-# Featurebyte helm charts (WIP)
+# Featurebyte helm charts
 
 This repository contains helm charts from featurebyte, a feature store used for machine learning application.
 

@@ -137,5 +137,5 @@ community-operator:
 # Sample ingress configuration
 # Disable this ingress and use your own ingress configuration
 ingress:
-  enabled: false
-  host: app.featurebyte.localhost
+  enabled: true
+  # host: app.featurebyte.localhost

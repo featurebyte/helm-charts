@@ -2,6 +2,17 @@
 
 This chart is used to deploy featurebyte-oss on kubernetes.
 
+## TL;DR
+
+```bash
+# Add mongodb community operator crds
+helm upgrade community-operator-crds community-operator-crds -n default --install --repo=https://mongodb.github.io/helm-charts
+
+# Install featurebyte-oss
+helm upgrade featurebyte-oss featurebyte-oss -n featurebyte --create-namespace --install --repo=https://featurebyte.github.io/helm-charts
+```
+
+
 ## Dependencies
 
 featurebyte-oss chart creates and exposes a mongodb cluster, a redis server and a minio server.
