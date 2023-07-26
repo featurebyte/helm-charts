@@ -37,5 +37,7 @@ spec:
         resources:
           requests:
             storage: {{ .Values.redis.standalone.persistence.size }}
+        {{- if .Values.redis.standalone.persistence.storageClass }}
         storageClassName: {{ .Values.redis.standalone.persistence.storageClass }}
+        {{- end }}
 {{- end }}

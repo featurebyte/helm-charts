@@ -57,5 +57,7 @@ spec:
         resources:
           requests:
             storage: {{ .Values.s3.minio.persistence.size }}
+        {{- if .Values.s3.minio.persistence.storageClass }}
         storageClassName: {{ .Values.s3.minio.persistence.storageClass }}
+        {{- end }}
 {{- end }}

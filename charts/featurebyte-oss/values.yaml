@@ -80,7 +80,8 @@ s3:
       tag: "RELEASE.2023-06-29T05-12-28Z"
     persistence:
       size: "4Gi"
-      storageClass: "standard"
+      # Override default storage class
+      storageClass: null
   # External s3 provider
   # Provide your S3 credentials and config here
   external:
@@ -97,7 +98,8 @@ mongodb:
   communityOperator:
     # Mongodb Community operator persistence settings
     persistence:
-      storageClass: "standard"
+      # Override default storage class
+      storageClass: null
       dataSize: "10G"
       logSize: "2G"
     password: "your-password"
@@ -122,7 +124,8 @@ redis:
       # Enable this to override the tag used (defaulted to Chart.appVersion)
       tag: "7.0"
     persistence:
-      storageClass: "standard"
+      # Override default storage class
+      storageClass: null
       size: "1Gi"
   # If redis is disabled, you would need to specify a redis connection str to connect
   external:
