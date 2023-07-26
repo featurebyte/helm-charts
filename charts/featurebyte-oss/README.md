@@ -19,6 +19,13 @@ helm upgrade community-operator-crds community-operator-crds -n default --instal
 
 # Install featurebyte-oss
 helm upgrade featurebyte-oss featurebyte-oss -n featurebyte --create-namespace --install --repo=https://featurebyte.github.io/helm-charts
+
+# An ingress is created listening on all routes
+curl localhost/status
+# Response: {"sdk_version":"0.4.1"}
+
+# Optionally: disable the ingress and bring up an ingress with your own specific requirements
+# disable by setting .Values.ingress.enabled: false
 ```
 
 
