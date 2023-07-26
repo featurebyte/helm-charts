@@ -79,3 +79,12 @@ tests:
       - equal:
           path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.storageClassName
           value: "my-storage-class"
+
+  - it: redis persistence storageClassName unset
+    template: redis/statefulset.yaml
+    set:
+      redis.provider: "standalone"
+      redis.standalone.persistence.storageClass: null
+    asserts:
+      - isNull:
+          path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.storageClassName

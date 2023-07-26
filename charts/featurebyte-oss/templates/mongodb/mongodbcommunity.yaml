@@ -35,14 +35,18 @@ spec:
             resources:
               requests:
                 storage: {{ .Values.mongodb.communityOperator.persistence.dataSize | quote }}
+            {{- if .Values.mongodb.communityOperator.persistence.storageClass }}
             storageClassName: {{ .Values.mongodb.communityOperator.persistence.storageClass }}
+            {{- end }}
         - metadata:
             name: logs-volume
           spec:
             resources:
               requests:
                 storage: {{ .Values.mongodb.communityOperator.persistence.logSize | quote }}
+            {{- if .Values.mongodb.communityOperator.persistence.storageClass }}
             storageClassName: {{ .Values.mongodb.communityOperator.persistence.storageClass }}
+            {{- end }}
       {{- if .Values.mongodb.reduceResource }}
       template:
         spec:

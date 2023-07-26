@@ -142,6 +142,15 @@ tests:
           path: spec.statefulSet.spec.volumeClaimTemplates[*].spec.storageClassName
           value: "local-path"
 
+  - it: mongodb community storageclass unset
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.communityOperator.persistence.storageClass: null
+    asserts:
+      - isNull:
+          path: spec.statefulSet.spec.volumeClaimTemplates[*].spec.storageClassName
+
   - it: mongodb community reduce resources
     template: mongodb/mongodbcommunity.yaml
     set:

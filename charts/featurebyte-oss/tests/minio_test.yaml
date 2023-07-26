@@ -79,3 +79,12 @@ tests:
       - equal:
           path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.storageClassName
           value: "my-storage-class"
+
+  - it: minio persistence storageClass unset
+    template: minio/statefulset.yaml
+    set:
+      s3.provider: "minio"
+      s3.minio.persistence.storageClass: null
+    asserts:
+      - isNull:
+          path: spec.volumeClaimTemplates[?(@.metadata.name == "data")].spec.storageClassName
