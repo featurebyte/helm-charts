@@ -22,7 +22,7 @@ helm upgrade featurebyte-oss featurebyte-oss -n featurebyte --create-namespace -
 
 # An ingress is created listening on all routes
 curl localhost/status
-# Response: {"sdk_version":"0.4.1"}
+# Response: {"sdk_version":"0.4.2"}
 
 # Optionally: disable the ingress and bring up an ingress with your own specific requirements
 # disable by setting .Values.ingress.enabled: false
