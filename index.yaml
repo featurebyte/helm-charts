@@ -2,8 +2,26 @@ apiVersion: v1
 entries:
   featurebyte-oss:
   - apiVersion: v2
+    appVersion: 0.4.2
+    created: "2023-08-07T09:07:05.143268508Z"
+    dependencies:
+    - condition: mongodb.provider == "communityOperator"
+      name: community-operator
+      repository: https://mongodb.github.io/helm-charts
+      version: 0.8.0
+    description: A Helm chart for Kubernetes
+    digest: cf82e96156d95bbcac107e9c53ce5ce11da487eb5a8b374640b6e3205984d30a
+    maintainers:
+    - email: it-admin@featurebyte.com
+      name: featurebyte
+    name: featurebyte-oss
+    type: application
+    urls:
+    - https://featurebyte.github.io/helm-charts/release/featurebyte-oss-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v2
     appVersion: 0.4.1
-    created: "2023-07-26T06:50:45.691720657Z"
+    created: "2023-08-07T09:07:05.140832662Z"
     dependencies:
     - condition: mongodb.provider == "communityOperator"
       name: community-operator
@@ -19,4 +37,4 @@ entries:
     urls:
     - https://featurebyte.github.io/helm-charts/release/featurebyte-oss-0.4.1.tgz
     version: 0.4.1
-generated: "2023-07-26T06:50:45.687095437Z"
+generated: "2023-08-07T09:07:05.138866426Z"
