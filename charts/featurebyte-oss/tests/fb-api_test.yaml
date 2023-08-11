@@ -80,7 +80,7 @@ tests:
           path: spec.scaleTargetRef.name
           pattern: -api$
 
-  - it: api disabled
+  - it: api hpa disabled
     template: fb-api/deployment.yaml
     set:
       featurebyte.api.autoscaling.enabled: false
@@ -212,3 +212,29 @@ tests:
           path: spec.template.spec.containers[0].env[?(@.name == "KRB5_REALM")]
       - isNull:
           path: spec.template.spec.containers[0].env[?(@.name == "KRB5_KDC")]
+
+  - it: secrets missing
+    template: fb-api/deployment.yaml
+    set:
+      encryption_secret: ""
+      jwt_secret: ""
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "CONFIG_PASSWORD_SECRET")]
+      - isNull:
+          path: spec.template.spec.containers[0].env[?(@.name == "CONFIG_JWT_SECRET")]
+
+  - it: secrets set
+    template: fb-api/deployment.yaml
+    set:
+      encryption_secret: "test_secret"
+      jwt_secret: "test_secret2"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "CONFIG_PASSWORD_SECRET")].value
+          decodeBase64: true
+          value: "test_secret"
+      - equal:
+          path: spec.template.spec.containers[0].env[?(@.name == "CONFIG_JWT_SECRET")].value
+          decodeBase64: true
+          value: "test_secret2"

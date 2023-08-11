@@ -164,6 +164,21 @@ tolerations:
 {{/*
 Generated Envs
 */}}
+{{- define "featurebyte-oss.env.secrets" -}}
+{{- if and .Values.encryption_secret  (ne .Values.encryption_secret "") -}}
+{{- /*# Ignores the environment variable if not set*/}}
+{{- /*# WARNING: Please set the CONFIG_PASSWORD_SECRET*/}}
+- name: CONFIG_PASSWORD_SECRET
+  value: {{ .Values.encryption_secret | b64enc }}
+{{- end }}
+{{- if and .Values.jwt_secret (ne .Values.jwt_secret "") -}}
+{{- /*# Ignores the environment variable if not set*/}}
+{{- /*# WARNING: Please set the CONFIG_JWT_SECRET*/}}
+- name: CONFIG_JWT_SECRET
+  value: {{ .Values.jwt_secret | b64enc }}
+{{- end }}
+{{- end }}
+
 {{- define "featurebyte-oss.env.mongodb" -}}
 {{- if eq .Values.mongodb.provider "communityOperator" -}}
 {{- /*# This is a full mongodb connection string*/ -}}
