@@ -28,6 +28,7 @@ spec:
               value: "0.0.0.0"
             - name: API_PORT
               value: "8088"
+            {{- include "featurebyte-oss.env.secrets" . | nindent 12 }}
             {{- include "featurebyte-oss.env.mongodb" . | nindent 12 }}
             {{- include "featurebyte-oss.env.redis" . | nindent 12 }}
             {{- include "featurebyte-oss.env.s3" . | nindent 12 }}

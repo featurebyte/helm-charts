@@ -2,6 +2,10 @@
 nameOverride: ""
 fullnameOverride: ""
 
+# Secrets
+encryption_secret: ""  # Change this to a random string
+jwt_secret: ""         # Change this to a random string
+
 serviceAccount:
   create: true
   annotations: {}
