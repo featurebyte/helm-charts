@@ -5,7 +5,7 @@ metadata:
   name: {{ include "featurebyte-oss.fullname" . }}-mongodb
   labels: {{ include "featurebyte-oss.labels.mongodb" . | nindent 4 }}
 spec:
-  members: 2
+  members: {{ .Values.mongodb.members }}
   type: ReplicaSet
   version: "6.0.5"
   security:

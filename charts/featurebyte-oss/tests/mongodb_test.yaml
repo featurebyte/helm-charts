@@ -11,7 +11,7 @@ tests:
           pattern: -mongodb$
       - equal:
           path: spec.members
-          value: 2
+          value: 1
       - equal:
           path: spec.security.authentication.modes
           value: ["SCRAM"]
@@ -184,3 +184,13 @@ tests:
           path: spec.statefulSet.spec.template.spec.containers[*].resources.limits.memory
       - isNull:
           path: spec.statefulSet.spec.template.spec.containers[*].resources.limits.cpu
+
+  - it: mongodb members size
+    template: mongodb/mongodbcommunity.yaml
+    set:
+      mongodb.provider: "communityOperator"
+      mongodb.members: 3
+    asserts:
+      - equal:
+          path: spec.members
+          value: 3
