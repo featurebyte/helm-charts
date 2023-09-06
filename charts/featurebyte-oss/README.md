@@ -21,7 +21,7 @@ JWT_SECRET=$(openssl rand -base64 32)
 ENC_SECRET=$(openssl rand -base64 32)
 
 # Install featurebyte-oss chart
-#  Generate your own secrets to be used for 
+#  Generate your own secrets to be used for
 #  jwt and password encryption
 helm upgrade featurebyte-oss featurebyte-oss \
     -n featurebyte \
@@ -32,7 +32,7 @@ helm upgrade featurebyte-oss featurebyte-oss \
 
 # An ingress is created listening on all routes
 curl localhost/status
-# Response: {"sdk_version":"0.4.2"}
+# Response: {"sdk_version":"0.5.0"}
 
 # Optionally: disable the ingress and bring up an ingress with your own specific requirements
 # disable by setting .Values.ingress.enabled: false

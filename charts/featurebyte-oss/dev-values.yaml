@@ -25,6 +25,7 @@ s3:
       size: "1G"
 
 mongodb:
+  members: 1
   reduceResource: true
   communityOperator:
     persistence:
