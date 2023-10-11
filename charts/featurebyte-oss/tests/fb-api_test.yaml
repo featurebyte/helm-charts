@@ -181,7 +181,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "featurebyte/featurebyte-server:0.5.1"  # Might need to update this if the appVersion changes
+          value: "featurebyte/featurebyte-server:0.6.0"  # Might need to update this if the appVersion changes
 
   - it: kerberos enabled with env values
     template: fb-api/deployment.yaml
