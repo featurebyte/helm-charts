@@ -2,8 +2,26 @@ apiVersion: v1
 entries:
   featurebyte-oss:
   - apiVersion: v2
+    appVersion: 0.6.0
+    created: "2023-10-11T05:34:53.083094416Z"
+    dependencies:
+    - condition: mongodb.provider == "communityOperator"
+      name: community-operator
+      repository: https://mongodb.github.io/helm-charts
+      version: 0.8.0
+    description: A Helm chart for Kubernetes
+    digest: c8c48118617540ce5c878e0272bb8b70bdb9c2c24b2494fb931615a04df06201
+    maintainers:
+    - email: it-admin@featurebyte.com
+      name: featurebyte
+    name: featurebyte-oss
+    type: application
+    urls:
+    - https://featurebyte.github.io/helm-charts/release/featurebyte-oss-0.6.0.tgz
+    version: 0.6.0
+  - apiVersion: v2
     appVersion: 0.5.1
-    created: "2023-09-13T06:12:36.345323157Z"
+    created: "2023-10-11T05:34:53.080126208Z"
     dependencies:
     - condition: mongodb.provider == "communityOperator"
       name: community-operator
@@ -21,7 +39,7 @@ entries:
     version: 0.5.1
   - apiVersion: v2
     appVersion: 0.5.0
-    created: "2023-09-13T06:12:36.343633247Z"
+    created: "2023-10-11T05:34:53.077511702Z"
     dependencies:
     - condition: mongodb.provider == "communityOperator"
       name: community-operator
@@ -39,7 +57,7 @@ entries:
     version: 0.5.0
   - apiVersion: v2
     appVersion: 0.4.2
-    created: "2023-09-13T06:12:36.342008737Z"
+    created: "2023-10-11T05:34:53.075529796Z"
     dependencies:
     - condition: mongodb.provider == "communityOperator"
       name: community-operator
@@ -57,7 +75,7 @@ entries:
     version: 0.4.3
   - apiVersion: v2
     appVersion: 0.4.2
-    created: "2023-09-13T06:12:36.340292527Z"
+    created: "2023-10-11T05:34:53.073419191Z"
     dependencies:
     - condition: mongodb.provider == "communityOperator"
       name: community-operator
@@ -75,7 +93,7 @@ entries:
     version: 0.4.2
   - apiVersion: v2
     appVersion: 0.4.1
-    created: "2023-09-13T06:12:36.338555617Z"
+    created: "2023-10-11T05:34:53.071298486Z"
     dependencies:
     - condition: mongodb.provider == "communityOperator"
       name: community-operator
@@ -91,4 +109,4 @@ entries:
     urls:
     - https://featurebyte.github.io/helm-charts/release/featurebyte-oss-0.4.1.tgz
     version: 0.4.1
-generated: "2023-09-13T06:12:36.336535905Z"
+generated: "2023-10-11T05:34:53.068581179Z"
