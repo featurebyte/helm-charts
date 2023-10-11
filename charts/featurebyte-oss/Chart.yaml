@@ -5,8 +5,8 @@ maintainers:
   - name: featurebyte
     email: it-admin@featurebyte.com
 type: application
-version: 0.5.1
-appVersion: "0.5.1"
+version: 0.6.0
+appVersion: "0.6.0"
 dependencies:
   - name: community-operator
     repository: https://mongodb.github.io/helm-charts
