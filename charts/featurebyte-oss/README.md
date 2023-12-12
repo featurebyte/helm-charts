@@ -1,3 +1,8 @@
+# NOTICE: This helm-chart has been deprecated as of 2023-12
+
+Please refer to https://tutorials.featurebyte.com/tutorial/sign-up for the latest way to deploy FeatureByte into your environment.
+For getting enterprise support and deployment, please reach out to us at https://featurebyte.com.
+
 # Featurebyte-OSS helm chart repository for kubernetes
 
 This chart is used to deploy featurebyte-oss on kubernetes.
